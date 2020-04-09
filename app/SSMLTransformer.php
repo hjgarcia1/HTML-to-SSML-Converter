@@ -66,11 +66,10 @@ class SSMLTransformer
     /**
      * Save a file to disk
      *
-     * @param $html
      * @param $filename
      */
-    public function save($html, $filename)
+    public function save($filename)
     {
-        Storage::disk('public_uploads')->put($filename, $html);
+        Storage::disk('public_uploads')->put($filename, $this->html);
     }
 }

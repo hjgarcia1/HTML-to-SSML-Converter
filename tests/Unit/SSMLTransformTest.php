@@ -61,7 +61,7 @@ class SSMLTransformTest extends TestCase
         $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p><p>Another Element</p></div>';
         $transformer = new SSMLTransformer($html);
 
-        $transformer->appendAttr('p',['class' => 'some-class']);
+        $transformer->appendAttr('p', ['class' => 'some-class']);
 
         $this->assertTrue(\Str::contains($transformer->html, 'class="some-class"'));
     }
@@ -79,13 +79,26 @@ class SSMLTransformTest extends TestCase
 
     public function test_it_can_save_a_file()
     {
-        $transformer = new SSMLTransformer('html');
+        $html = '<p>some text</p><p>more text</p>';
 
-        $transformer->save('html', 'some-name.ssml');
+        $transformer = new SSMLTransformer($html);
 
-        $this->assertFileExists(\public_path('storage/some-name.ssml'));
+        $transformer->appendTo('<break />', 'p')
+            ->appendAttr('break', ['time' => '800ms'])
+            ->save('file.ssml');
+
+        $this->assertFileExists(\public_path('storage/file.ssml'));
         //assertContent is saved into the file
-        $content = Storage::disk('public_uploads')->get('some-name.ssml');
-        $this->assertEquals('html', $content);
+        $content = Storage::disk('public_uploads')->get('file.ssml');
+        $this->assertStringContainsString('<p>some text<break time="800ms"/></p>', $content);
+        $this->assertStringContainsString('<p>more text<break time="800ms"/></p>', $content);
     }
+
+    public function tearDown(): void
+    {
+        Storage::disk('public_uploads')->delete('file.ssml');
+
+        parent::tearDown();
+    }
+
 }
