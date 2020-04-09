@@ -19,7 +19,7 @@ class SSMLTransformer
             ->find('//' . $where)
             ->append($tag);
 
-        $this->html = (string) $html;
+        $this->html = preg_replace('/^.+\n/', '', (string) $html);
 
         return $this;
     }
@@ -36,7 +36,7 @@ class SSMLTransformer
             ->find('//' . $tag)
             ->remove();
 
-        $this->html = (string) $html;
+        $this->html = preg_replace('/^.+\n/', '', (string) $html);
 
         return $this;
     }

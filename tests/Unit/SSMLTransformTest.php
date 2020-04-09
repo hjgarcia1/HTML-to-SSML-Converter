@@ -58,7 +58,7 @@ class SSMLTransformTest extends TestCase
 
     public function test_it_can_save_a_file()
     {
-        $transformer = new SSMLTransformer();
+        $transformer = new SSMLTransformer('html');
 
         $transformer->save('html', 'some-name.ssml');
 
