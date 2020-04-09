@@ -14,7 +14,28 @@
 
 @include('partials.navbar')
 
-<div class="container"></div>
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Link</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($ssmls as $ssml)
+            <tr>
+                <td>{{ $ssml->id }}</td>
+                <td>{{ $ssml->title }}</td>
+                <td><a href="{{ $ssml->link }}" target="_blank">{{ $ssml->link }}</a></td>
+                <td></td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+</div>
 
 @include('partials.scripts')
 </body>

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Ssml;
+
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('home');
+        $ssmls = Ssml::all();
+        return view('home', compact('ssmls'));
     }
 }
