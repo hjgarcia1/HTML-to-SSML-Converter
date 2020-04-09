@@ -15,4 +15,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index');
 
+Route::get('/converter', 'ConvertController@show');
 Route::post('/convert', 'ConvertController@transform');

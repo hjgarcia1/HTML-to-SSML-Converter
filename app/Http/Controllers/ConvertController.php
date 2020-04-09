@@ -6,6 +6,11 @@ use Storage;
 
 class ConvertController extends Controller
 {
+    public function show()
+    {
+        return view('converter');
+    }
+
     public function transform()
     {
         $data = request()->validate([

@@ -15,6 +15,14 @@ class ConvertTest extends TestCase
         parent::tearDown();
     }
 
+    public function test_we_can_load_the_converter_form()
+    {
+        $response = $this->get('/converter');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('converter');
+    }
+
     public function test_it_can_convert_the_html_to_ssml()
     {
         $response = $this->withoutExceptionHandling()->post('/convert', [
