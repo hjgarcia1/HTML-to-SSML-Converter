@@ -8,6 +8,8 @@ use Storage;
 
 class ConvertTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function tearDown(): void
     {
         Storage::disk('public_uploads')->delete('file.ssml');
@@ -39,6 +41,12 @@ class ConvertTest extends TestCase
         $response->assertRedirect('/');
         $response->assertSessionHas('message', 'Conversion Successful!');
         $response->assertSessionHas('link', 'Use this link to get the file: '.url('storage/some-name.ssml'));
+        $this->assertDatabaseHas('ssmls', [
+            'title' => 'Some Name',
+            'link' => url('storage/some-name.ssml'),
+            'content' => $this->valid_html(),
+        ]);
+
     }
 
     /**
