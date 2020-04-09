@@ -54,11 +54,15 @@ class SSMLTransformer
      */
     public function removeTag($tag)
     {
-        $html = \FluentDOM($this->html)
+        $html = '<ssml>'.$this->html.'</ssml>';
+
+        $html = \FluentDOM($html)
             ->find('//' . $tag)
             ->remove();
 
         $this->html = preg_replace('/^.+\n/', '', (string)$html);
+        $this->html = preg_replace('/<ssml>/', '', (string)$this->html);
+        $this->html = preg_replace('/\<\/ssml\>\\n/', '', (string)$this->html);
 
         return $this;
     }

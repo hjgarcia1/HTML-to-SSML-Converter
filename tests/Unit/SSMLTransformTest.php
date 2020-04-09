@@ -12,7 +12,7 @@ class SSMLTransformTest extends TestCase
 
     public function test_it_can_remove_an_html_tag()
     {
-        $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p></div>';
+        $html = '<p>Hey bro, <a href="#">click here</a><br /> :)</p><p>Hey bro, <a href="#">click here</a><br /> :)</p>';
 
         $transformer = new SSMLTransformer($html);
 
