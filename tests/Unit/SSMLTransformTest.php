@@ -19,6 +19,16 @@ class SSMLTransformTest extends TestCase
         $this->assertFalse(\Str::contains($transformer->html, '<br />'));
     }
 
+    public function test_we_can_add_an_html_tag()
+    {
+        $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>';
+        $transformer = new SSMLTransformer($html);
+
+        $transformer->appendTag('<span></span>');
+
+        $this->assertTrue(\Str::contains($transformer->html, 'span'));
+    }
+
     public function test_it_can_save_a_file()
     {
         $transformer = new SSMLTransformer();

@@ -15,6 +15,36 @@ class SSMLTransformer
         $this->html = $html;
     }
 
+    public function appendTag($tag)
+    {
+        $crawler = new Crawler($this->html, url('/'));
+
+
+
+        $crawler->filterXPath('//div')->each(function (Crawler $divs) use ($tag, $crawler) {
+            foreach ($divs as $div) {
+                $dom = $crawler->getNode(0)->parentNode;
+                //creating div
+                $div = $dom->createElement($tag);
+
+                $element = $dom->parentNode->createElement($tag);
+                $div->appendChild($element);
+            }
+        });
+
+        $this->html = $crawler->html();
+
+        dd($this->html);
+
+        return $this;
+    }
+
+    /**
+     * Remove a tag
+     *
+     * @param $tag
+     * @return $this
+     */
     public function removeTag($tag)
     {
         $crawler = new Crawler($this->html, url('/'));
