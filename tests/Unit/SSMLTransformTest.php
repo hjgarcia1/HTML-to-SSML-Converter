@@ -39,9 +39,9 @@ class SSMLTransformTest extends TestCase
         $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p><p>fejaf</p></div>';
         $transformer = new SSMLTransformer($html);
 
-        $transformer->appendTo('<break />', 'p');
+        $transformer->appendTo('<break/>', 'p');
 
-        $this->assertEquals(2, substr_count($transformer->html, '<break />'));
+        $this->assertEquals(2, substr_count($transformer->html, '<break/>'));
     }
 
     public function test_we_can_append_multiple_html_tags()
@@ -68,13 +68,13 @@ class SSMLTransformTest extends TestCase
 
     public function test_we_can_append_multiple_ssml_break_tags_to_multiple_paragraphs()
     {
-        $html = '<div><p>some text</p><p>more text</p></div>';
+        $html = '<p>some text</p><p>more text</p>';
 
         $transformer = new SSMLTransformer($html);
 
         $transformer->appendTo('<break />', 'p')->appendAttr('break', ['time' => '800ms']);
 
-        $this->assertEquals(2, substr_count($transformer->html, '<break time="800ms"/>'));;
+        $this->assertEquals(2, substr_count($transformer->html, '<break time="800ms"/>'));
     }
 
     public function test_it_can_save_a_file()

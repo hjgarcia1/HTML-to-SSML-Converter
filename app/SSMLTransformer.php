@@ -15,26 +15,33 @@ class SSMLTransformer
 
     public function appendTo($tag, $where)
     {
-        $html = \FluentDOM($this->html)
-            ->find('//' . $where)->each(function ($node) use ($tag) {
-                $node->append($tag);
-            });
+        $html = '<ssml>'.$this->html.'</ssml>';
 
-        $this->html = preg_replace('/^.+\n/', '', html_entity_decode($html));
+        $html = \FluentDOM($html)
+            ->find('//' . $where)
+            ->append($tag);
+
+        $this->html = preg_replace('/^.+\n/', '', (string)$html->formatOutput());
+        $this->html = preg_replace('/\<\/?ssml\>\\n/', '', (string)$this->html);
+
+        $this->html = html_entity_decode($this->html);
 
         return $this;
+
     }
 
     public function appendAttr($tag, $attr)
     {
         $firstKey = array_key_first($attr);
+        $html = '<ssml>'.$this->html.'</ssml>';
 
-        $html = \FluentDOM($this->html);
+        $html = \FluentDOM($html);
 
         $html->find('//' . $tag)
             ->attr[$firstKey] = $attr[$firstKey];
 
-        $this->html = preg_replace('/^.+\n/', '', (string)$html);
+        $this->html = preg_replace('/^.+\n/', '', (string)$html->formatOutput());
+        $this->html = preg_replace('/\<\/?ssml\>\\n/', '', (string)$this->html);
 
         return $this;
     }
