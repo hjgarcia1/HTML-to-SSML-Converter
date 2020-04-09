@@ -16,10 +16,11 @@ class SSMLTransformer
     public function appendTo($tag, $where)
     {
         $html = \FluentDOM($this->html)
-            ->find('//' . $where)
-            ->append($tag);
+            ->find('//' . $where)->each(function ($node) use ($tag) {
+                $node->append($tag);
+            });
 
-        $this->html = preg_replace('/^.+\n/', '', (string)$html);
+        $this->html = preg_replace('/^.+\n/', '', html_entity_decode($html));
 
         return $this;
     }
