@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ssml;
+use App\SSMLTransformer;
 use Storage;
 
 class ConvertController extends Controller
@@ -20,20 +21,21 @@ class ConvertController extends Controller
         ]);
 
         //set the file name
-        $filename = \Str::slug($data['name']);
+        $filename = \Str::slug($data['name']) . '.ssml';
 
-        //create the file
-        Storage::disk('public_uploads')->put($filename . '.ssml', $data['html']);
+        $ssmlTransformer = new SSMLTransformer($data['html']);
+
+        $ssmlTransformer->save($filename);
 
         Ssml::create([
             'title' => $data['name'],
-            'link' => url('storage/' . $filename . '.ssml'),
-            'content' => $data['html'],
+            'link' => url('storage/' . $filename),
+            'content' => $ssmlTransformer->html,
         ]);
 
         //redirect back to the home page with message
         return redirect('/')
-            ->with('link', 'Use this link to get the file: ' . url('storage/' . $filename . '.ssml'))
+            ->with('link', 'Use this link to get the file: ' . url('storage/' . $filename))
             ->with('message', 'Conversion Successful!');
     }
 }
