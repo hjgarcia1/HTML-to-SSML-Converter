@@ -12,7 +12,7 @@ class SSMLTransformTest extends TestCase
 
     public function test_it_can_remove_an_html_tag()
     {
-        $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>';
+        $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p></div>';
 
         $transformer = new SSMLTransformer($html);
 
@@ -23,20 +23,20 @@ class SSMLTransformTest extends TestCase
 
     public function test_it_can_remove_multiple_html_tags()
     {
-        $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><img src="google.com"/><img src="google.com"/></p></div>';
+        $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><img src="#"/><img src="#"/></p></div>';
 
         $transformer = new SSMLTransformer($html);
 
-        $this->assertEquals(2, substr_count($transformer->html, '<img src="google.com"/>'));
+        $this->assertEquals(2, substr_count($transformer->html, '<img src="#"/>'));
 
         $transformer->removeTag('img');
 
-        $this->assertEquals(0, substr_count($transformer->html, '<img src="google.com"/>'));
+        $this->assertEquals(0, substr_count($transformer->html, '<img src="#"/>'));
     }
 
     public function test_we_can_add_an_html_tag()
     {
-        $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>';
+        $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p></div>';
         $transformer = new SSMLTransformer($html);
 
         $transformer->appendTo('<span>Lorem</span>', 'p');
@@ -46,7 +46,7 @@ class SSMLTransformTest extends TestCase
 
     public function test_we_append_multiple_html_tags()
     {
-        $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p><p>Another Element</p></div>';
+        $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p><p>Another Element</p></div>';
         $transformer = new SSMLTransformer($html);
 
         $transformer->appendTo('<span>Lorem</span>', 'p');
