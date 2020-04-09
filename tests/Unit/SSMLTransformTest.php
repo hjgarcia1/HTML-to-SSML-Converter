@@ -2,9 +2,10 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Storage;
+
 use App\SSMLTransformer;
+use Storage;
+use Tests\TestCase;
 
 class SSMLTransformTest extends TestCase
 {
@@ -12,6 +13,7 @@ class SSMLTransformTest extends TestCase
     public function test_it_can_remove_an_html_tag()
     {
         $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>';
+
         $transformer = new SSMLTransformer($html);
 
         $transformer->removeTag('br');
@@ -21,10 +23,10 @@ class SSMLTransformTest extends TestCase
 
     public function test_we_can_add_an_html_tag()
     {
-        $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>';
+        $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p><p>Another Element</p></div>';
         $transformer = new SSMLTransformer($html);
 
-        $transformer->appendTag('<span></span>');
+        $transformer->appendTo('<span>Lorem</span>', 'p');
 
         $this->assertTrue(\Str::contains($transformer->html, 'span'));
     }

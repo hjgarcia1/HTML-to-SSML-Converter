@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Symfony\Component\DomCrawler\Crawler;
 use Illuminate\Support\Facades\Storage;
-
 
 class SSMLTransformer
 {
@@ -15,26 +13,13 @@ class SSMLTransformer
         $this->html = $html;
     }
 
-    public function appendTag($tag)
+    public function appendTo($tag, $where)
     {
-        $crawler = new Crawler($this->html, url('/'));
+        $html = \FluentDOM($this->html)
+            ->find('//' . $where)
+            ->append($tag);
 
-
-
-        $crawler->filterXPath('//div')->each(function (Crawler $divs) use ($tag, $crawler) {
-            foreach ($divs as $div) {
-                $dom = $crawler->getNode(0)->parentNode;
-                //creating div
-                $div = $dom->createElement($tag);
-
-                $element = $dom->parentNode->createElement($tag);
-                $div->appendChild($element);
-            }
-        });
-
-        $this->html = $crawler->html();
-
-        dd($this->html);
+        $this->html = (string) $html;
 
         return $this;
     }
@@ -47,14 +32,11 @@ class SSMLTransformer
      */
     public function removeTag($tag)
     {
-        $crawler = new Crawler($this->html, url('/'));
-        $crawler->filter($tag)->each(function (Crawler $crawler) {
-            foreach ($crawler as $node) {
-                $node->parentNode->removeChild($node);
-            }
-        });
+        $html = \FluentDOM($this->html)
+            ->find('//' . $tag)
+            ->remove();
 
-        $this->html = $crawler->html();
+        $this->html = (string) $html;
 
         return $this;
     }
