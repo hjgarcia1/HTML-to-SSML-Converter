@@ -22,10 +22,15 @@ class ConvertController extends Controller
 
         //set the file name
         $filename = \Str::slug($data['name']) . '.ssml';
-
         $ssmlTransformer = new SSMLTransformer($data['html']);
 
-        $ssmlTransformer->save($filename);
+        $ssmlTransformer
+            ->removeTag('br')
+            ->removeTag('img')
+            ->appendTo('<break />', 'p')
+            ->appendTo('<break />', 'h2')
+            ->appendAttr('break', ['time' => '800ms'])
+            ->save($filename);
 
         Ssml::create([
             'title' => $data['name'],

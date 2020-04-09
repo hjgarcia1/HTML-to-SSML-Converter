@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\SSMLTransformer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Storage;
@@ -27,7 +28,15 @@ class ConvertTest extends TestCase
 
     public function test_it_can_convert_the_html_to_ssml()
     {
-        $response = $this->withoutExceptionHandling()->post('/convert', [
+        $transformer = new SSMLTransformer($this->valid_html());
+
+        $transformer->removeTag('br')
+            ->removeTag('img')
+            ->appendTo('<break/>', 'h2')
+            ->appendTo('<break/>', 'p')
+            ->appendAttr('break', ['time' => '800ms']);
+
+        $response = $this->post('/convert', [
             'name' => 'Some Name',
             'html' => $this->valid_html()]);
 
@@ -36,7 +45,7 @@ class ConvertTest extends TestCase
 
         //assertContent is saved into the file
         $content = Storage::disk('public_uploads')->get('some-name.ssml');
-        $this->assertEquals($this->valid_html(), $content);
+        $this->assertEquals($transformer->html, $content);
 
         $response->assertRedirect('/');
         $response->assertSessionHas('message', 'Conversion Successful!');
@@ -44,9 +53,10 @@ class ConvertTest extends TestCase
         $this->assertDatabaseHas('ssmls', [
             'title' => 'Some Name',
             'link' => url('storage/some-name.ssml'),
-            'content' => $this->valid_html(),
+            'content' => $transformer->html,
         ]);
-
+        $this->assertStringNotContainsString('<br />', $content);
+        $this->assertStringNotContainsString('<img src="somefile.img" />', $content);
     }
 
     /**
@@ -56,7 +66,7 @@ class ConvertTest extends TestCase
      */
     private function valid_html()
     {
-        return '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu p</p>';
+        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p>';
     }
 
 }
