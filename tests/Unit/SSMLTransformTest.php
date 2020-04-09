@@ -18,10 +18,33 @@ class SSMLTransformTest extends TestCase
 
         $transformer->removeTag('br');
 
-        $this->assertFalse(\Str::contains($transformer->html, '<br />'));
+        $this->assertEquals(0, substr_count($transformer->html, '<br />'));
+    }
+
+    public function test_it_can_remove_multiple_html_tags()
+    {
+        $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><img src="google.com"/><img src="google.com"/></p></div>';
+
+        $transformer = new SSMLTransformer($html);
+
+        $this->assertEquals(2, substr_count($transformer->html, '<img src="google.com"/>'));
+
+        $transformer->removeTag('img');
+
+        $this->assertEquals(0, substr_count($transformer->html, '<img src="google.com"/>'));
     }
 
     public function test_we_can_add_an_html_tag()
+    {
+        $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>';
+        $transformer = new SSMLTransformer($html);
+
+        $transformer->appendTo('<span>Lorem</span>', 'p');
+
+        $this->assertTrue(\Str::contains($transformer->html, 'span'));
+    }
+
+    public function test_we_append_multiple_html_tags()
     {
         $html = '<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p><p>Another Element</p></div>';
         $transformer = new SSMLTransformer($html);
@@ -29,6 +52,8 @@ class SSMLTransformTest extends TestCase
         $transformer->appendTo('<span>Lorem</span>', 'p');
 
         $this->assertTrue(\Str::contains($transformer->html, 'span'));
+        $this->assertEquals(2, substr_count($transformer->html, '<span>'));
+        $this->assertEquals(2, substr_count($transformer->html, '</span>'));
     }
 
     public function test_it_can_save_a_file()
