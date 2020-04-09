@@ -19,7 +19,21 @@ class SSMLTransformer
             ->find('//' . $where)
             ->append($tag);
 
-        $this->html = preg_replace('/^.+\n/', '', (string) $html);
+        $this->html = preg_replace('/^.+\n/', '', (string)$html);
+
+        return $this;
+    }
+
+    public function appendAttr($tag, $attr)
+    {
+        $firstKey = array_key_first($attr);
+
+        $html = \FluentDOM($this->html);
+
+        $html->find('//' . $tag)
+            ->attr[$firstKey] = $attr[$firstKey];
+
+        $this->html = preg_replace('/^.+\n/', '', (string)$html);
 
         return $this;
     }
@@ -36,7 +50,7 @@ class SSMLTransformer
             ->find('//' . $tag)
             ->remove();
 
-        $this->html = preg_replace('/^.+\n/', '', (string) $html);
+        $this->html = preg_replace('/^.+\n/', '', (string)$html);
 
         return $this;
     }

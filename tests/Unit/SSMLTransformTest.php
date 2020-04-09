@@ -34,7 +34,7 @@ class SSMLTransformTest extends TestCase
         $this->assertEquals(0, substr_count($transformer->html, '<img src="#"/>'));
     }
 
-    public function test_we_can_add_an_html_tag()
+    public function test_we_can_append_an_html_tag()
     {
         $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p></div>';
         $transformer = new SSMLTransformer($html);
@@ -44,7 +44,7 @@ class SSMLTransformTest extends TestCase
         $this->assertTrue(\Str::contains($transformer->html, 'span'));
     }
 
-    public function test_we_append_multiple_html_tags()
+    public function test_we_can_append_multiple_html_tags()
     {
         $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p><p>Another Element</p></div>';
         $transformer = new SSMLTransformer($html);
@@ -55,6 +55,17 @@ class SSMLTransformTest extends TestCase
         $this->assertEquals(2, substr_count($transformer->html, '<span>'));
         $this->assertEquals(2, substr_count($transformer->html, '</span>'));
     }
+
+    public function test_we_can_append_an_html_attribute()
+    {
+        $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p><p>Another Element</p></div>';
+        $transformer = new SSMLTransformer($html);
+
+        $transformer->appendAttr('p',['class' => 'some-class']);
+
+        $this->assertTrue(\Str::contains($transformer->html, 'class="some-class"'));
+    }
+
 
     public function test_it_can_save_a_file()
     {
