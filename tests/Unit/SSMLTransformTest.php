@@ -18,7 +18,7 @@ class SSMLTransformTest extends TestCase
 
         $transformer->removeTag('br');
 
-        $this->assertEquals(0, substr_count($transformer->html, '<br />'));
+        $this->assertEquals(0, substr_count($transformer->content, '<br />'));
     }
 
     public function test_it_can_remove_multiple_html_tags()
@@ -27,12 +27,12 @@ class SSMLTransformTest extends TestCase
 
         $transformer = new SSMLTransformer($html);
 
-        $this->assertEquals(2, substr_count($transformer->html, '<img src="#"/>'));
+        $this->assertEquals(2, substr_count($transformer->content, '<img src="#"/>'));
 
         $transformer->removeTag('img')->removeTag('a');
 
-        $this->assertEquals(0, substr_count($transformer->html, '<img src="#"/>'));
-        $this->assertStringNotContainsString('<a href="#">', $transformer->html);
+        $this->assertEquals(0, substr_count($transformer->content, '<img src="#"/>'));
+        $this->assertStringNotContainsString('<a href="#">', $transformer->content);
     }
 
     public function test_we_can_append_an_html_tag()
@@ -42,7 +42,7 @@ class SSMLTransformTest extends TestCase
 
         $transformer->appendTo('<break/>', 'p');
 
-        $this->assertEquals(2, substr_count($transformer->html, '<break/>'));
+        $this->assertEquals(2, substr_count($transformer->content, '<break/>'));
     }
 
     public function test_we_can_append_multiple_html_tags()
@@ -52,9 +52,9 @@ class SSMLTransformTest extends TestCase
 
         $transformer->appendTo('<span>Lorem</span>', 'p');
 
-        $this->assertTrue(\Str::contains($transformer->html, 'span'));
-        $this->assertEquals(2, substr_count($transformer->html, '<span>'));
-        $this->assertEquals(2, substr_count($transformer->html, '</span>'));
+        $this->assertTrue(\Str::contains($transformer->content, 'span'));
+        $this->assertEquals(2, substr_count($transformer->content, '<span>'));
+        $this->assertEquals(2, substr_count($transformer->content, '</span>'));
     }
 
     public function test_we_can_append_an_html_attribute()
@@ -64,7 +64,7 @@ class SSMLTransformTest extends TestCase
 
         $transformer->appendAttr('p', ['class' => 'some-class']);
 
-        $this->assertTrue(\Str::contains($transformer->html, 'class="some-class"'));
+        $this->assertTrue(\Str::contains($transformer->content, 'class="some-class"'));
     }
 
     public function test_we_can_append_multiple_ssml_break_tags_to_multiple_paragraphs()
@@ -75,7 +75,7 @@ class SSMLTransformTest extends TestCase
 
         $transformer->appendTo('<break />', 'p')->appendAttr('break', ['time' => '800ms']);
 
-        $this->assertEquals(2, substr_count($transformer->html, '<break time="800ms"/>'));
+        $this->assertEquals(2, substr_count($transformer->content, '<break time="800ms"/>'));
     }
 
     public function test_it_can_save_a_file()

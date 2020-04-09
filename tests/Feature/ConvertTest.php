@@ -45,7 +45,7 @@ class ConvertTest extends TestCase
 
         //assertContent is saved into the file
         $content = Storage::disk('public_uploads')->get('some-name.ssml');
-        $this->assertEquals($transformer->html, $content);
+        $this->assertEquals($transformer->content, $content);
 
         $response->assertRedirect('/');
         $response->assertSessionHas('message', 'Conversion Successful!');
@@ -53,7 +53,7 @@ class ConvertTest extends TestCase
         $this->assertDatabaseHas('ssmls', [
             'title' => 'Some Name',
             'link' => url('storage/some-name.ssml'),
-            'content' => $transformer->html,
+            'content' => $transformer->content,
         ]);
         $this->assertStringNotContainsString('<br />', $content);
         $this->assertStringNotContainsString('<img src="somefile.img" />', $content);

@@ -6,25 +6,25 @@ use Illuminate\Support\Facades\Storage;
 
 class SSMLTransformer
 {
-    public $html = '';
+    public $content = '';
 
     public function __construct($html)
     {
-        $this->html = $html;
+        $this->content = $html;
     }
 
     public function appendTo($tag, $where)
     {
-        $html = '<ssml>'.$this->html.'</ssml>';
+        $html = '<ssml>'.$this->content.'</ssml>';
 
         $html = \FluentDOM($html)
             ->find('//' . $where)
             ->append($tag);
 
-        $this->html = preg_replace('/^.+\n/', '', (string)$html->formatOutput());
-        $this->html = preg_replace('/\<\/?ssml\>\\n/', '', (string)$this->html);
+        $this->content = preg_replace('/^.+\n/', '', (string)$html->formatOutput());
+        $this->content = preg_replace('/\<\/?ssml\>\\n/', '', (string)$this->content);
 
-        $this->html = html_entity_decode($this->html);
+        $this->content = html_entity_decode($this->content);
 
         return $this;
 
@@ -33,15 +33,15 @@ class SSMLTransformer
     public function appendAttr($tag, $attr)
     {
         $firstKey = array_key_first($attr);
-        $html = '<ssml>'.$this->html.'</ssml>';
+        $html = '<ssml>'.$this->content.'</ssml>';
 
         $html = \FluentDOM($html);
 
         $html->find('//' . $tag)
             ->attr[$firstKey] = $attr[$firstKey];
 
-        $this->html = preg_replace('/^.+\n/', '', (string)$html->formatOutput());
-        $this->html = preg_replace('/\<\/?ssml\>\\n/', '', (string)$this->html);
+        $this->content = preg_replace('/^.+\n/', '', (string)$html->formatOutput());
+        $this->content = preg_replace('/\<\/?ssml\>\\n/', '', (string)$this->content);
 
         return $this;
     }
@@ -54,15 +54,15 @@ class SSMLTransformer
      */
     public function removeTag($tag)
     {
-        $html = '<ssml>'.$this->html.'</ssml>';
+        $html = '<ssml>'.$this->content.'</ssml>';
 
         $html = \FluentDOM($html)
             ->find('//' . $tag)
             ->remove();
 
-        $this->html = preg_replace('/^.+\n/', '', (string)$html);
-        $this->html = preg_replace('/<ssml>/', '', (string)$this->html);
-        $this->html = preg_replace('/\<\/ssml\>\\n/', '', (string)$this->html);
+        $this->content = preg_replace('/^.+\n/', '', (string)$html);
+        $this->content = preg_replace('/<ssml>/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/ssml\>\\n/', '', (string)$this->content);
 
         return $this;
     }
@@ -74,6 +74,6 @@ class SSMLTransformer
      */
     public function save($filename)
     {
-        Storage::disk('public_uploads')->put($filename, $this->html);
+        Storage::disk('public_uploads')->put($filename, $this->content);
     }
 }

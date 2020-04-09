@@ -15,16 +15,34 @@ class ConvertController extends Controller
 
     public function transform()
     {
-        $data = request()->validate([
-            'name' => 'required',
-            'html' => 'required|max:5000',
-        ]);
+        $data = $this->validateData();
 
         //set the file name
-        $filename = \Str::slug($data['name']) . '.ssml';
-        $ssmlTransformer = new SSMLTransformer($data['html']);
+        $filename = $this->generateFilename($data['name']);
+        $ssml = $this->generateSsml($data['html'], $filename);
 
-        $ssmlTransformer
+        Ssml::create([
+            'title' => $data['name'],
+            'link' => $this->getFilePath($filename),
+            'content' => $ssml->content,
+        ]);
+
+        //redirect back to the home page with message
+        return redirect('/')
+            ->with('link', 'Use this link to get the file: ' . $this->getFilePath($filename))
+            ->with('message', 'Conversion Successful!');
+    }
+
+    /**
+     * @param $html
+     * @param string $filename
+     * @return SSMLTransformer
+     */
+    protected function generateSsml($html, string $filename): SSMLTransformer
+    {
+        $ssml = new SSMLTransformer($html);
+
+        $ssml
             ->removeTag('br')
             ->removeTag('img')
             ->appendTo('<break />', 'p')
@@ -32,15 +50,35 @@ class ConvertController extends Controller
             ->appendAttr('break', ['time' => '800ms'])
             ->save($filename);
 
-        Ssml::create([
-            'title' => $data['name'],
-            'link' => url('storage/' . $filename),
-            'content' => $ssmlTransformer->html,
-        ]);
+        return $ssml;
+    }
 
-        //redirect back to the home page with message
-        return redirect('/')
-            ->with('link', 'Use this link to get the file: ' . url('storage/' . $filename))
-            ->with('message', 'Conversion Successful!');
+    /**
+     * @param string $filename
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\UrlGenerator|string
+     */
+    protected function getFilePath(string $filename)
+    {
+        return url('storage/' . $filename);
+    }
+
+    /**
+     * @return array
+     */
+    protected function validateData(): array
+    {
+        return $data = request()->validate([
+            'name' => 'required',
+            'html' => 'required|max:5000',
+        ]);
+    }
+
+    /**
+     * @param $name
+     * @return string
+     */
+    protected function generateFilename($name): string
+    {
+        return \Str::slug($name) . '.ssml';
     }
 }
