@@ -10,7 +10,7 @@ class ConvertController extends Controller
     {
         $data = request()->validate([
             'name' => 'required',
-            'html' => 'required|max:500',
+            'html' => 'required|max:5000',
         ]);
 
         //set the file name
