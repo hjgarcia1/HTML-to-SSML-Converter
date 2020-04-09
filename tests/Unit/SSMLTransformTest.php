@@ -29,9 +29,10 @@ class SSMLTransformTest extends TestCase
 
         $this->assertEquals(2, substr_count($transformer->html, '<img src="#"/>'));
 
-        $transformer->removeTag('img');
+        $transformer->removeTag('img')->removeTag('a');
 
         $this->assertEquals(0, substr_count($transformer->html, '<img src="#"/>'));
+        $this->assertStringNotContainsString('<a href="#">', $transformer->html);
     }
 
     public function test_we_can_append_an_html_tag()
