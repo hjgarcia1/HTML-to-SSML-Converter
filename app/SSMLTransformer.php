@@ -43,8 +43,9 @@ class SSMLTransformer
         $this->content = preg_replace('/^.+\n/', '', (string)$html);
         $this->content = preg_replace('/<html>/', '', $this->content);
         $this->content = preg_replace('/<body>/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/html\>\\n/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/body\>\\n/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/html\>/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/body\>/', '', (string)$this->content);
+        $this->content = preg_replace('/\\n/', '', (string)$this->content);
 
         return $this;
     }
@@ -57,19 +58,16 @@ class SSMLTransformer
      */
     public function removeTag($tag)
     {
-        $html = '<ssml>'.$this->content.'</ssml>';
-
-        $html = \FluentDOM($html, 'text/html')
+        $html = \FluentDOM($this->content, 'text/html')
             ->find('//' . $tag)
             ->remove();
 
         $this->content = preg_replace('/^.+\n/', '', (string)$html);
-        $this->content = preg_replace('/<ssml>/', '', (string)$this->content);
         $this->content = preg_replace('/<html>/', '', (string)$this->content);
         $this->content = preg_replace('/<body>/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/ssml\>\\n/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/html\>\\n/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/body\>\\n/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/html\>/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/body\>/', '', (string)$this->content);
+        $this->content = preg_replace('/\\n/', '', (string)$this->content);
 
         return $this;
     }

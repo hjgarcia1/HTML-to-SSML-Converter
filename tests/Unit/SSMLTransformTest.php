@@ -31,6 +31,38 @@ class SSMLTransformTest extends TestCase
         $this->assertEquals(0, substr_count($transformer->content, '<img src="#" alt="#"/>'));
     }
 
+    public function test_we_are_removing_extra_elements()
+    {
+        $transformer = new SSMLTransformer($this->valid_html());
+
+        $transformer->removeTag('br')
+            ->removeTag('img')
+            ->removeTag('h2')
+            ->removeTag('dt')
+            ->removeTag('dd')
+            ->removeTag('figure')
+            ->appendTo('<break/>', 'p')
+            ->appendAttr('break', ['time' => '800ms'])
+            ->save('some-name.ssml');
+
+
+        $content = Storage::disk('public_uploads')->get('some-name.ssml');
+
+        $this->assertEquals($transformer->content, $content);
+        $this->assertEquals(0, substr_count($transformer->content, '<figure>'));
+        $this->assertEquals(0, substr_count($transformer->content, '</figure>'));
+        $this->assertEquals(0, substr_count($transformer->content, '<h2>'));
+        $this->assertEquals(0, substr_count($transformer->content, '</h2>'));
+        $this->assertEquals(0, substr_count($transformer->content, '<dt>'));
+        $this->assertEquals(0, substr_count($transformer->content, '</dt>'));
+        $this->assertEquals(0, substr_count($transformer->content, '<dd>'));
+        $this->assertEquals(0, substr_count($transformer->content, '</dd>'));
+        $this->assertEquals(0, substr_count($transformer->content, '<body>'));
+        $this->assertEquals(0, substr_count($transformer->content, '</body>'));
+        $this->assertEquals(0, substr_count($transformer->content, '<html>'));
+        $this->assertEquals(0, substr_count($transformer->content, '</html>'));
+    }
+
     public function test_we_can_append_an_html_tag()
     {
         $html = '<p>String</p>';
@@ -115,7 +147,7 @@ class SSMLTransformTest extends TestCase
 
     protected function valid_html()
     {
-        return '<h2>What We See in the Sky</h2>    <img style= "padding-right: 21px" src="#" alt="#"/>    <img src="#" alt="#"/>    <img src="#" alt="#"/>    <p>Look up at the sky. What can you see in the sky?</p>  <p>You might see some flying birds. You might see a plane. You might even see a rainbow.</p>  <p>These objects are in the air above us.</p>    <img style= "padding-right: 4px" src="#" alt="#"/>    <img src="#" alt="#"/>    <p>During daytime, you see the <strong>sun</strong>. Sometimes you can see it clearly. At other times clouds block the sun, but we can still see some of its light.</p>    <img src="#" alt="#"/>    <p>During daytime, the sun provides heat and light to the earth.</p>    <img src="#" alt="#"/>    <img src="#" alt="#"/>    <p>If the sky is clear at night, you may see <strong>stars</strong>. Stars are huge balls of gas. They are far away in space, but we can see their light.</p>    <p>On a clear night, you may also see the <strong>moon</strong>.</p>    <img src="#" alt="#"/>    <p>We can see the moon during both the day and the night. This is the moon during the day.</p>    <img src="#" alt="#"/>    <p>Have you ever seen the moon during the day?</p>    <img src="#" alt="#"/>    <p>The sun, moon, and stars are called <strong>celestial objects</strong>. A celestial object is a natural object that we can see even though it is far away.</p>    <img src="#" alt="#"/>    <p>Scientists look for <strong>patterns</strong> as they observe the sky and ask questions.</p>  <p>What do you see when you look up at the sky?</p>  <br/>  <br/>    <h2>Glossary</h2>      <dl>    	<div style="display: grid; grid-gap: 10px; margin-bottom: 20px">            		<dt style="margin-right: 10px;"><strong>Celestial object</strong></dt>            		<dd>Any natural object that appears far away in our sky, such as the sun, moon, and stars.</dd>        	</div>          	<div style="display: grid; grid-gap: 10px; margin-bottom: 20px">            		<dt style="margin-right: 10px;"><strong>Moon</strong></dt>            		<dd>The object that circles Earth and shines by light reflected from the sun.</dd>        	</div>          	<div style="display: grid; grid-gap: 10px; margin-bottom: 20px">            		<dt style="margin-right: 10px;"><strong>Sun</strong></dt>      		<dd>The object in space that provides heat and light to Earth. Earth travels around the sun.</dd>        	</div>        	  	<div style="display: grid; grid-gap: 10px; margin-bottom: 20px">            		<dt style="margin-right: 10px;"><strong>Star</strong></dt>            		<dd>A huge ball of gas. Stars gives off heat and light and appear as bright points in the night sky because most of them are so far away. The star that is closest to Earth is the sun.</dd>        	</div>          </dl>	                                                              ';
+        return '<h2>Meerkat</h2>  <br><figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-01.jpg"          alt="Meerkat" width="650"></figure>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-02.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats live in dry deserts or grasslands. They live in groups with other meerkats.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-03.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats take turns standing guard. They watch for bigger animals. This helps keep the group safe.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-04.jpg"          alt="Meerkats" width="650"></figure>  <p>Then other meerkats in the group can eat, rest, or play.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-05.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats eat insects and other small animals. They also eat plants. This meerkat is eating a grasshopper.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-06.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats get water wherever they can find it. This meerkat is drinking from a tiny puddle.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-07.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats make their homes by digging into the ground.</p>  <p>Their underground homes are called burrows.</p>  <p>Burrows give them shade and a safe place to sleep.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-08.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats find everything they need in the places where they live.</p>';
     }
 
     public function tearDown(): void
