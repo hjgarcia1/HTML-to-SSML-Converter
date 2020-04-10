@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Ssml;
 use App\SSMLTransformer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -49,7 +50,7 @@ class ConvertTest extends TestCase
 
         $response->assertRedirect('/');
         $response->assertSessionHas('message', 'Conversion Successful!');
-        $response->assertSessionHas('link', 'Use this link to get the file: '.url('storage/some-name.ssml'));
+        $response->assertSessionHas('link', 'Use this link to get the file: ' . url('storage/some-name.ssml'));
         $this->assertDatabaseHas('ssmls', [
             'title' => 'Some Name',
             'link' => url('storage/some-name.ssml'),
@@ -57,6 +58,38 @@ class ConvertTest extends TestCase
         ]);
         $this->assertStringNotContainsString('<br />', $content);
         $this->assertStringNotContainsString('<img src="somefile.img" />', $content);
+    }
+
+    public function test_we_can_delete_an_ssml_file_along_with_database_record()
+    {
+        $transformer = new SSMLTransformer($this->valid_html());
+
+        $transformer->removeTag('br')
+            ->removeTag('img')
+            ->appendTo('<break/>', 'h2')
+            ->appendTo('<break/>', 'p')
+            ->appendAttr('break', ['time' => '800ms']);
+
+        $ssml = factory(Ssml::class)->create([
+            'title' => 'SSML',
+            'link' => $this->generateFilename('SSML'),
+            'content' => $transformer->content,
+        ]);
+
+        $response = $this->get('/ssml/' . $ssml->id);
+
+        $response->assertOk();
+        $response->assertSee($ssml->title);
+        $response->assertSee($ssml->link);
+    }
+
+    /**
+     * @param $name
+     * @return string
+     */
+    protected function generateFilename($name): string
+    {
+        return \Str::slug($name) . '.ssml';
     }
 
     /**

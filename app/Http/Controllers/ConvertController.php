@@ -33,6 +33,12 @@ class ConvertController extends Controller
             ->with('message', 'Conversion Successful!');
     }
 
+    public function edit($id)
+    {
+        $ssml = Ssml::find($id);
+        return view('ssml.edit',compact('ssml'));
+    }
+
     /**
      * @param $html
      * @param string $filename

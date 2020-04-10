@@ -17,3 +17,4 @@ Route::get('/', 'HomeController@index');
 
 Route::get('/converter', 'ConvertController@show');
 Route::post('/convert', 'ConvertController@transform');
+Route::get('/ssml/{id}', 'ConvertController@edit');
