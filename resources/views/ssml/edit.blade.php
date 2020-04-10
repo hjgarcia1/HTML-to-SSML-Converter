@@ -37,6 +37,7 @@
             </div>
             {!! $errors->first('html','<div class="invalid-feedback">:message</div>') !!}
             <button type="submit" class="btn btn-primary">Update</button>
+            <a href="/" type="submit" class="btn btn-secondary">Back to List</a>
         </form>
     </div>
 </div>
