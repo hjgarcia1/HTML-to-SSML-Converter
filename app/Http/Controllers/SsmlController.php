@@ -65,8 +65,10 @@ class SsmlController extends Controller
         $ssml
             ->removeTag('br')
             ->removeTag('img')
+            ->removeTag('h2')
+            ->removeTag('dt')
+            ->removeTag('dd')
             ->appendTo('<break />', 'p')
-            ->appendTo('<break />', 'h2')
             ->appendAttr('break', ['time' => '800ms'])
             ->save($filename);
 
