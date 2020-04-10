@@ -13,6 +13,7 @@ class Ssml extends \Eloquent
     protected $fillable = [
         'title',
         'link',
+        'html',
         'content'
     ];
 }

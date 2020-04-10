@@ -24,6 +24,7 @@ class ConvertController extends Controller
         Ssml::create([
             'title' => $data['name'],
             'link' => $this->getFilePath($filename),
+            'html' => $data['html'],
             'content' => $ssml->content,
         ]);
 

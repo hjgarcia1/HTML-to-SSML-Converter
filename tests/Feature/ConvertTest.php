@@ -37,7 +37,7 @@ class ConvertTest extends TestCase
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms']);
 
-        $response = $this->post('/convert', [
+        $response = $this->withoutExceptionHandling()->post('/convert', [
             'name' => 'Some Name',
             'html' => $this->valid_html()]);
 
