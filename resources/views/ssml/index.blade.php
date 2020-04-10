@@ -14,7 +14,8 @@
 
 @include('partials.navbar')
 
-<div class="container">
+<div class="container mt-3">
+    @include('partials.alerts')
     <table class="table">
         <thead>
         <tr>

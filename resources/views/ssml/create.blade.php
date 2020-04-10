@@ -14,7 +14,8 @@
 
 @include('partials.navbar')
 
-<div class="container">
+<div class="container mt-3">
+    @include('partials.alerts')
     <div class="col-md-6 offset-md-3">
         <h1>SSML Converter</h1>
         <form method="post" action="/convert">
