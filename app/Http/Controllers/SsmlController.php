@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SsmlRequest;
 use App\Ssml;
-use App\SSMLTransformer;
 use Storage;
 
 /**
@@ -41,24 +41,22 @@ class SsmlController extends Controller
     /**
      * Store an SSML
      *
+     * @param SsmlRequest $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store()
+    public function store(SsmlRequest $request)
     {
-        $data = $this->validateData();
+        $filename = Ssml::getFilename($request->get('title'));
 
-        //set the file name
-        $filename = Ssml::getFilename($data['title']);
-        $ssml = Ssml::generate($data['html'], $filename);
+        $ssml = Ssml::generate($request->get('html'), $filename);
 
         Ssml::create([
-            'title' => $data['title'],
+            'title' => $request->get('title'),
             'link' => Ssml::getFilePath($filename),
-            'html' => $data['html'],
+            'html' => $request->get('html'),
             'content' => $ssml->content,
         ]);
 
-        //redirect back to the home page with message
         return redirect('/')
             ->with('link', 'Use this link to get the file: ' . Ssml::getFilePath($filename))
             ->with('message', 'Conversion Successful!');
@@ -80,10 +78,11 @@ class SsmlController extends Controller
     /**
      * Update an SSML
      *
+     * @param SsmlRequest $request
      * @param $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update($id)
+    public function update(SsmlRequest $request, $id)
     {
         $ssml = Ssml::find($id);
 
@@ -92,9 +91,9 @@ class SsmlController extends Controller
         $filename = Ssml::getFilename(request('title'));
         $newSsml = Ssml::generate(request('html'), $filename);
         $ssml->update([
-            'title' => request('title'),
+            'title' => $request->get('title'),
             'link' => Ssml::getFilePath($filename),
-            'html' => request('html'),
+            'html' => $request->get('html'),
             'content' => $newSsml->content,
         ]);
 
@@ -118,16 +117,5 @@ class SsmlController extends Controller
 
         return redirect('/')
             ->with('message', 'SSML file was deleted!');
-    }
-
-    /**
-     * @return array
-     */
-    protected function validateData(): array
-    {
-        return $data = request()->validate([
-            'title' => 'required',
-            'html' => 'required|max:5000',
-        ]);
     }
 }
