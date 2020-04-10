@@ -73,6 +73,19 @@ class SSMLTransformer
     }
 
     /**
+     * Replace headers
+     *
+     * @param $tag
+     * @return $this
+     */
+    public function replaceHeaders($tag)
+    {
+        $this->content = preg_replace('/h[\d]{1}/', $tag, (string)$this->content);
+
+        return $this;
+    }
+
+    /**
      * Save a file to disk
      *
      * @param $filename

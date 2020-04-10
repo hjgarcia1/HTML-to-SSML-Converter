@@ -86,14 +86,29 @@ class SSMLTransformTest extends TestCase
         $this->assertEquals(0, substr_count($transformer->content, '</dd>'));
     }
 
-    public function test_we_can_remove_all_headers_tags()
+    public function test_we_can_replace_all_headers_tags()
     {
-        $transformer = new SSMLTransformer($this->valid_html());
+        $html = '<h2>Title</h2><h2>Another title</h2><p>Some text</p>';
+        $transformer = new SSMLTransformer($html);
 
-        $transformer->removeTag('h2');
+        $transformer->replaceHeaders('p');
 
-        $this->assertEquals(0, substr_count($transformer->content, '<h2>'));
-        $this->assertEquals(0, substr_count($transformer->content, '</h2>'));
+        $this->assertEquals(3, substr_count($transformer->content, '<p>'));
+        $this->assertEquals(3, substr_count($transformer->content, '</p>'));
+    }
+
+    public function test_when_headers_are_replaced_break_and_time_attributes_uses()
+    {
+        $html = '<h2>Title</h2><h2>Another title</h2><p>Some text</p>';
+        $transformer = new SSMLTransformer($html);
+
+        $transformer->replaceHeaders('p')
+            ->appendTo('<break/>', 'p')
+            ->appendAttr('break', ['time' => '800ms']);
+
+        $this->assertEquals(3, substr_count($transformer->content, '<p>'));
+        $this->assertEquals(3, substr_count($transformer->content, '</p>'));
+        $this->assertEquals(3, substr_count($transformer->content, '<break time="800ms"></break>'));
     }
 
 
