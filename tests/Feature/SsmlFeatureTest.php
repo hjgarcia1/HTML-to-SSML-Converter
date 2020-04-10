@@ -54,7 +54,7 @@ class SsmlFeatureTest extends TestCase
 
         $transformer->removeTag('br')
             ->removeTag('img')
-            ->removeTag('h2')
+            ->replaceHeaders('p')
             ->removeTag('dt')
             ->removeTag('dd')
             ->removeTag('figure')
@@ -151,7 +151,7 @@ class SsmlFeatureTest extends TestCase
         $existingFile = $this->generateFilename('ssml file');
         $transformer->removeTag('br')
             ->removeTag('img')
-            ->removeTag('h2')
+            ->replaceHeaders('p')
             ->appendTo('<break/>', 'h2')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms'])
@@ -162,7 +162,7 @@ class SsmlFeatureTest extends TestCase
         $newFile = $this->generateFilename('new file');
         $newTransformer->removeTag('br')
             ->removeTag('img')
-            ->removeTag('h2')
+            ->replaceHeaders('p')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms'])
             ->save($newFile);
