@@ -57,6 +57,7 @@ class SsmlFeatureTest extends TestCase
             ->removeTag('h2')
             ->removeTag('dt')
             ->removeTag('dd')
+            ->removeTag('figure')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms']);
 
@@ -146,7 +147,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function valid_html()
     {
-        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p><dd><dt>feaf</dt></dd>';
+        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p><dd><dt>feaf</dt></dd><figure></figure>';
     }
 
 }
