@@ -21,6 +21,7 @@ $factory->define(Ssml::class, function (Faker $faker) {
     return [
         'title' => $faker->company,
         'link' => $faker->url,
+        'html' => '<p>some content</p>',
         'content' => '<p>some content</p>',
     ];
 });

@@ -17,6 +17,7 @@ class CreateSsmlsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('link')->unique();
+            $table->text('html');
             $table->text('content');
             $table->timestamps();
         });
