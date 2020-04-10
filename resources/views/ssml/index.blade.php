@@ -56,6 +56,7 @@
         @endforelse
         </tbody>
     </table>
+    {{ $ssmls->links() }}
 </div>
 
 @include('partials.scripts')

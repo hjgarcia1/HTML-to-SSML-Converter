@@ -10,7 +10,7 @@ class SsmlController extends Controller
 {
     public function index()
     {
-        $ssmls = Ssml::all();
+        $ssmls = Ssml::paginate(25);
         return view('ssml.index', compact('ssmls'));
     }
 
