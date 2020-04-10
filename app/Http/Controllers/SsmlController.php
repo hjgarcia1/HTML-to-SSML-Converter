@@ -48,6 +48,24 @@ class SsmlController extends Controller
         return view('ssml.edit', compact('ssml'));
     }
 
+    public function update($id)
+    {
+        $ssml = Ssml::find($id);
+
+        Storage::disk('public_uploads')->delete(basename($ssml->link));
+
+        $filename = $this->generateFilename(request('title'));
+        $newSsml = $this->generateSsml(request('html'), $filename);
+        $ssml->update([
+            'title' => request('title'),
+            'link' => $this->getFilePath($filename),
+            'html' => request('html'),
+            'content' => $newSsml->content,
+        ]);
+
+        return redirect('/ssml/' . $id)->with('message','SSML was updated!');
+    }
+
     public function delete($id)
     {
         $ssml = Ssml::find($id);

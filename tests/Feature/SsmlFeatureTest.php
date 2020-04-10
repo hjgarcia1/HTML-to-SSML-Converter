@@ -5,8 +5,8 @@ namespace Tests\Feature;
 use App\Ssml;
 use App\SSMLTransformer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Storage;
+use Tests\TestCase;
 
 class SsmlFeatureTest extends TestCase
 {
@@ -144,6 +144,56 @@ class SsmlFeatureTest extends TestCase
         $response->assertSee($ssml->html);
     }
 
+    public function test_we_can_update_an_ssml()
+    {
+        //existing ssml transformation
+        $transformer = new SSMLTransformer($this->valid_html());
+        $existingFile = $this->generateFilename('ssml file');
+        $transformer->removeTag('br')
+            ->removeTag('img')
+            ->removeTag('h2')
+            ->appendTo('<break/>', 'h2')
+            ->appendTo('<break/>', 'p')
+            ->appendAttr('break', ['time' => '800ms'])
+            ->save($existingFile);
+
+        //new ssml transformation
+        $newTransformer = new SSMLTransformer($this->new_html());
+        $newFile = $this->generateFilename('new file');
+        $newTransformer->removeTag('br')
+            ->removeTag('img')
+            ->removeTag('h2')
+            ->appendTo('<break/>', 'p')
+            ->appendAttr('break', ['time' => '800ms'])
+            ->save($newFile);
+
+
+        $ssml = factory(Ssml::class)->create([
+            'title' => 'SSML',
+            'link' => $this->getFilePath($existingFile),
+            'html' => $this->valid_html(),
+            'content' => $transformer->content,
+        ]);
+
+        $response = $this->post('/ssml/' . $ssml->id, [
+            'title' => 'New Title',
+            'link' => $this->getFilePath($newFile),
+            'html' => $this->new_html(),
+        ]);
+
+        $response->assertRedirect('/ssml/' . $ssml->id);
+        $this->assertDatabaseHas('ssmls', [
+            'id' => $ssml->id,
+            'title' => 'New Title',
+            'link' => $this->getFilePath($this->generateFilename('New Title')),
+            'html' => $this->new_html(),
+//            'content' => $newTransformer->content,
+        ]);
+        $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
+        $this->assertFileExists(\public_path('storage/new-title.ssml'));
+    }
+
+
     /**
      * @param $name
      * @return string
@@ -170,6 +220,16 @@ class SsmlFeatureTest extends TestCase
     private function valid_html()
     {
         return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p><dd><dt>feaf</dt></dd><figure></figure>';
+    }
+
+    /**
+     * Valid HTML
+     *
+     * @return string
+     */
+    private function new_html()
+    {
+        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p><dd><dt>feaf</dt></dd><figure></figure>';
     }
 
 }

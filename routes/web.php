@@ -17,4 +17,5 @@ Route::get('/', 'SsmlController@index');
 Route::get('/create', 'SsmlController@show');
 Route::post('/store', 'SsmlController@store');
 Route::get('/ssml/{id}', 'SsmlController@edit');
+Route::post('/ssml/{id}', 'SsmlController@update');
 Route::delete('/ssml/{id}', 'SsmlController@delete');
