@@ -6,8 +6,17 @@ use App\Ssml;
 use App\SSMLTransformer;
 use Storage;
 
+/**
+ * Class SsmlController
+ * @package App\Http\Controllers
+ */
 class SsmlController extends Controller
 {
+    /**
+     * Show all SSMLs
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         if (request()->has('query')) {
@@ -19,33 +28,48 @@ class SsmlController extends Controller
         return view('ssml.index', compact('ssmls'));
     }
 
-
+    /**
+     * Show the create form
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show()
     {
         return view('ssml.create');
     }
 
+    /**
+     * Store an SSML
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function store()
     {
         $data = $this->validateData();
 
         //set the file name
-        $filename = $this->generateFilename($data['title']);
-        $ssml = $this->generateSsml($data['html'], $filename);
+        $filename = Ssml::getFilename($data['title']);
+        $ssml = Ssml::generate($data['html'], $filename);
 
         Ssml::create([
             'title' => $data['title'],
-            'link' => $this->getFilePath($filename),
+            'link' => Ssml::getFilePath($filename),
             'html' => $data['html'],
             'content' => $ssml->content,
         ]);
 
         //redirect back to the home page with message
         return redirect('/')
-            ->with('link', 'Use this link to get the file: ' . $this->getFilePath($filename))
+            ->with('link', 'Use this link to get the file: ' . Ssml::getFilePath($filename))
             ->with('message', 'Conversion Successful!');
     }
 
+    /**
+     * Edit SSML
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         $ssml = Ssml::find($id);
@@ -53,17 +77,23 @@ class SsmlController extends Controller
         return view('ssml.edit', compact('ssml'));
     }
 
+    /**
+     * Update an SSML
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function update($id)
     {
         $ssml = Ssml::find($id);
 
         Storage::disk('public_uploads')->delete(basename($ssml->link));
 
-        $filename = $this->generateFilename(request('title'));
-        $newSsml = $this->generateSsml(request('html'), $filename);
+        $filename = Ssml::getFilename(request('title'));
+        $newSsml = Ssml::generate(request('html'), $filename);
         $ssml->update([
             'title' => request('title'),
-            'link' => $this->getFilePath($filename),
+            'link' => Ssml::getFilePath($filename),
             'html' => request('html'),
             'content' => $newSsml->content,
         ]);
@@ -71,6 +101,13 @@ class SsmlController extends Controller
         return redirect('/ssml/' . $id)->with('message', 'SSML was updated!');
     }
 
+    /**
+     * Delete SSML
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Exception
+     */
     public function delete($id)
     {
         $ssml = Ssml::find($id);
@@ -84,39 +121,6 @@ class SsmlController extends Controller
     }
 
     /**
-     * @param $html
-     * @param string $filename
-     * @return SSMLTransformer
-     */
-    protected function generateSsml($html, string $filename): SSMLTransformer
-    {
-        $ssml = new SSMLTransformer($html);
-
-        $ssml
-            ->removeTag('br')
-            ->removeTag('img')
-            ->removeTag('dt')
-            ->removeTag('dd')
-            ->removeTag('figure')
-            ->replaceHeaders('p')
-            ->appendTo('<break />', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
-            ->wrapAll('speak')
-            ->save($filename);
-
-        return $ssml;
-    }
-
-    /**
-     * @param string $filename
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\UrlGenerator|string
-     */
-    protected function getFilePath(string $filename)
-    {
-        return url('storage/' . $filename);
-    }
-
-    /**
      * @return array
      */
     protected function validateData(): array
@@ -125,14 +129,5 @@ class SsmlController extends Controller
             'title' => 'required',
             'html' => 'required|max:5000',
         ]);
-    }
-
-    /**
-     * @param $name
-     * @return string
-     */
-    protected function generateFilename($name): string
-    {
-        return \Str::slug($name) . '.ssml';
     }
 }

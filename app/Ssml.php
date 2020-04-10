@@ -16,4 +16,52 @@ class Ssml extends \Eloquent
         'html',
         'content'
     ];
+
+    /**
+     * Get the filename for an Ssml file name
+     *
+     * @param $name
+     * @return string
+     */
+    public static function getFilename($name): string
+    {
+        return \Str::slug($name) . '.ssml';
+    }
+
+    /**
+     * Get the file path for an Ssml
+     *
+     * @param string $filename
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\UrlGenerator|string
+     */
+    public static function getFilePath(string $filename)
+    {
+        return url('storage/' . $filename);
+    }
+
+    /**
+     * Generate Ssml output and save
+     *
+     * @param $html
+     * @param string $filename
+     * @return SSMLTransformer
+     */
+    public static function generate($html, string $filename): SSMLTransformer
+    {
+        $ssml = new SSMLTransformer($html);
+
+        $ssml
+            ->removeTag('br')
+            ->removeTag('img')
+            ->removeTag('dt')
+            ->removeTag('dd')
+            ->removeTag('figure')
+            ->replaceHeaders('p')
+            ->appendTo('<break />', 'p')
+            ->appendAttr('break', ['time' => '800ms'])
+            ->wrapAll('speak')
+            ->save($filename);
+
+        return $ssml;
+    }
 }
