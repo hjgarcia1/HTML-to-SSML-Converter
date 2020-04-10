@@ -24,7 +24,7 @@ class ConvertTest extends TestCase
         $response = $this->get('/converter');
 
         $response->assertStatus(200);
-        $response->assertViewIs('converter');
+        $response->assertViewIs('ssml.create');
     }
 
     public function test_it_can_convert_the_html_to_ssml()
@@ -38,7 +38,7 @@ class ConvertTest extends TestCase
             ->appendAttr('break', ['time' => '800ms']);
 
         $response = $this->withoutExceptionHandling()->post('/convert', [
-            'name' => 'Some Name',
+            'title' => 'Some Name',
             'html' => $this->valid_html()]);
 
         //assert file was created

@@ -10,7 +10,7 @@ class ConvertController extends Controller
 {
     public function show()
     {
-        return view('converter');
+        return view('ssml.create');
     }
 
     public function transform()
@@ -18,11 +18,11 @@ class ConvertController extends Controller
         $data = $this->validateData();
 
         //set the file name
-        $filename = $this->generateFilename($data['name']);
+        $filename = $this->generateFilename($data['title']);
         $ssml = $this->generateSsml($data['html'], $filename);
 
         Ssml::create([
-            'title' => $data['name'],
+            'title' => $data['title'],
             'link' => $this->getFilePath($filename),
             'html' => $data['html'],
             'content' => $ssml->content,
@@ -75,7 +75,7 @@ class ConvertController extends Controller
     protected function validateData(): array
     {
         return $data = request()->validate([
-            'name' => 'required',
+            'title' => 'required',
             'html' => 'required|max:5000',
         ]);
     }

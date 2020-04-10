@@ -15,7 +15,7 @@ class ValidationTest extends TestCase
         ]);
 
         $response->assertRedirect('/');
-        $response->assertSessionHasErrors('name');
+        $response->assertSessionHasErrors('title');
     }
 
     public function test_html_field_is_required()
