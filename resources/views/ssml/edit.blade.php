@@ -22,7 +22,7 @@
             {{ csrf_field() }}
 
             <div class="form-group">
-                <label for="name">Title</label> <input type="text" id="title" name="title" value="{{ old('title', $ssml->title) }}" class="form-control">
+                <label for="title">Title</label> <input type="text" id="title" name="title" value="{{ old('title', $ssml->title) }}" class="form-control">
                 {!! $errors->first('title','<div class="invalid-feedback">:message</div>') !!}
             </div>
 
