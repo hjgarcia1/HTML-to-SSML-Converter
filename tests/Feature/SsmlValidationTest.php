@@ -9,7 +9,7 @@ class SsmlValidationTest extends TestCase
 
     public function test_it_the_name_field_required()
     {
-        $response = $this->post('/convert', [
+        $response = $this->post('/store', [
             'name' => '',
             'html' => $this->valid_html()
         ]);
@@ -20,7 +20,7 @@ class SsmlValidationTest extends TestCase
 
     public function test_html_field_is_required()
     {
-        $response = $this->post('/convert', [
+        $response = $this->post('/store', [
             'name' => 'some name',
             'html' => ''
         ]);
@@ -31,7 +31,7 @@ class SsmlValidationTest extends TestCase
 
     public function test_html_field_is_cannot_be_more_than_5000_characters()
     {
-        $response = $this->post('/convert', [
+        $response = $this->post('/store', [
             'name' => 'some name',
             'html' => $this->invalid_html()
         ]);

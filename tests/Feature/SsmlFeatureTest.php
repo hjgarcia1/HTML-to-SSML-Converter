@@ -58,7 +58,7 @@ class SsmlFeatureTest extends TestCase
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms']);
 
-        $response = $this->withoutExceptionHandling()->post('/convert', [
+        $response = $this->post('/store', [
             'title' => 'Some Name',
             'html' => $this->valid_html()]);
 
