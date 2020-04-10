@@ -18,7 +18,7 @@
     @include('partials.alerts')
     <div class="col-md-6 offset-md-3">
         <h1>SSML Converter</h1>
-        <form method="post" action="/convert">
+        <form method="post" action="/store">
             {{ csrf_field() }}
 
             <div class="form-group">
