@@ -10,7 +10,12 @@ class SsmlController extends Controller
 {
     public function index()
     {
-        $ssmls = Ssml::paginate(25);
+        if (request()->has('query')) {
+            $ssmls = Ssml::where('title', 'LIKE', '%' . request('query') . '%')->paginate(25);
+        } else {
+            $ssmls = Ssml::paginate(25);
+        }
+
         return view('ssml.index', compact('ssmls'));
     }
 
@@ -63,7 +68,7 @@ class SsmlController extends Controller
             'content' => $newSsml->content,
         ]);
 
-        return redirect('/ssml/' . $id)->with('message','SSML was updated!');
+        return redirect('/ssml/' . $id)->with('message', 'SSML was updated!');
     }
 
     public function delete($id)

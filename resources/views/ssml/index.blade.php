@@ -16,7 +16,23 @@
 
 <div class="container mt-3">
     @include('partials.alerts')
-    <h1>SSML List</h1>
+
+    <div class="d-flex">
+        <h1>SSML List</h1>
+        <form class="form-inline d-flex mb-3 ml-auto" method="get" action="/">
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="query" class="sr-only">Search</label> <input type="text" class="form-control" id="query"
+                    placeholder="Search..." value="{{ request('query') }}" name="query">
+
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Search</button>
+            @if(request()->has('query'))
+                <a href="/" class="btn-danger btn mb-2 ml-2">Clear</a>
+            @endif
+        </form>
+    </div>
+
+
     <table class="table">
         <thead>
         <tr>
