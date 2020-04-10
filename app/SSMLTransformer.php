@@ -15,19 +15,16 @@ class SSMLTransformer
 
     public function appendTo($tag, $where)
     {
-
-
         $html = \FluentDOM($this->content, 'text/html')
             ->find('//' . $where)
-            ->append($tag);
+            ->after($tag);
 
         $this->content = preg_replace('/^.+\n/', '', (string)$html);
         $this->content = preg_replace('/<html>/', '', $this->content);
         $this->content = preg_replace('/<body>/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/html\>\\n/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/body\>\\n/', '', (string)$this->content);
-
-        $this->content = html_entity_decode($this->content);
+        $this->content = preg_replace('/\<\/html\>/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/body\>/', '', (string)$this->content);
+        $this->content = preg_replace('/\\n/', '', (string)$this->content);
 
         return $this;
 

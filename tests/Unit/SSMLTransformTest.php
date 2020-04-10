@@ -33,23 +33,22 @@ class SSMLTransformTest extends TestCase
 
     public function test_we_can_append_an_html_tag()
     {
-        $transformer = new SSMLTransformer($this->valid_html());
+        $html = '<p>String</p>';
+        $transformer = new SSMLTransformer($html);
 
         $transformer->appendTo('<break/>', 'p');
 
-        $this->assertEquals(12, substr_count($transformer->content, '<break></break>'));
+        $this->assertEquals('<p>String</p><break></break>', $transformer->content);
     }
 
     public function test_we_can_append_multiple_html_tags()
     {
-        $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p><p>Another Element</p></div>';
-        $transformer = new SSMLTransformer($html);
+        $transformer = new SSMLTransformer($this->valid_html());
 
         $transformer->appendTo('<span>Lorem</span>', 'p');
 
         $this->assertTrue(Str::contains($transformer->content, 'span'));
-        $this->assertEquals(2, substr_count($transformer->content, '<span>'));
-        $this->assertEquals(2, substr_count($transformer->content, '</span>'));
+        $this->assertStringContainsString('<span>Lorem</span>', $transformer->content);
     }
 
     public function test_we_can_append_an_html_attribute()
@@ -75,19 +74,19 @@ class SSMLTransformTest extends TestCase
 
     public function test_it_can_save_a_file()
     {
-        $html = '<p>some text</p><p>more text</p>';
+        $transformer = new SSMLTransformer($this->valid_html());
 
-        $transformer = new SSMLTransformer($html);
-
-        $transformer->appendTo('<break />', 'p')
+        $transformer->removeTag('br')
+            ->removeTag('img')
+            ->appendTo('<break />', 'p')
             ->appendAttr('break', ['time' => '800ms'])
             ->save('file.ssml');
 
         $this->assertFileExists(public_path('storage/file.ssml'));
         //assertContent is saved into the file
         $content = Storage::disk('public_uploads')->get('file.ssml');
-        $this->assertStringContainsString('<p>some text<break time="800ms"></break></p>', $content);
-        $this->assertStringContainsString('<p>more text<break time="800ms"></break></p>', $content);
+
+        $this->assertStringContainsString('<break time="800ms"></break>', $content);
     }
 
     protected function valid_html()
