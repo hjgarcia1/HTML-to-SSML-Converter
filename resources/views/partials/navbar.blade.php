@@ -10,7 +10,7 @@
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/converter">Convert</a>
+                    <a class="nav-link" href="/create">New</a>
                 </li>
             </ul>
         </div>

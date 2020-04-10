@@ -42,7 +42,7 @@ class SsmlFeatureTest extends TestCase
 
     public function test_we_can_show_create_form()
     {
-        $response = $this->get('/converter');
+        $response = $this->get('/create');
 
         $response->assertStatus(200);
         $response->assertViewIs('ssml.create');
