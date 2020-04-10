@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'HomeController@index');
-
+Route::get('/', 'SsmlController@index');
 Route::get('/converter', 'SsmlController@show');
 Route::post('/convert', 'SsmlController@store');
 Route::delete('/ssml/{id}', 'SsmlController@delete');

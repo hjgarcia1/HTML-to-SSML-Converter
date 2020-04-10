@@ -8,6 +8,13 @@ use Storage;
 
 class SsmlController extends Controller
 {
+    public function index()
+    {
+        $ssmls = Ssml::all();
+        return view('ssml.index', compact('ssmls'));
+    }
+
+
     public function show()
     {
         return view('ssml.create');
