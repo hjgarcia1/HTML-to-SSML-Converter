@@ -26,7 +26,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($ssmls as $ssml)
+        @forelse($ssmls as $ssml)
             <tr>
                 <td>{{ $ssml->id }}</td>
                 <td>{{ $ssml->title }}</td>
@@ -43,7 +43,12 @@
                     </form>
                 </td>
             </tr>
-        @endforeach
+
+        @empty
+            <tr>
+                <td colspan="4" class="text-center">No Records</td>
+            </tr>
+        @endforelse
         </tbody>
     </table>
 </div>
