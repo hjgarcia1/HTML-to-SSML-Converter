@@ -101,6 +101,7 @@ class SsmlController extends Controller
             ->replaceHeaders('p')
             ->appendTo('<break />', 'p')
             ->appendAttr('break', ['time' => '800ms'])
+            ->wrapAll('speak')
             ->save($filename);
 
         return $ssml;

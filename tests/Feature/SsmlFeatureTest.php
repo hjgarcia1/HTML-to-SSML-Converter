@@ -59,18 +59,20 @@ class SsmlFeatureTest extends TestCase
             ->removeTag('dd')
             ->removeTag('figure')
             ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms']);
+            ->appendAttr('break', ['time' => '800ms'])
+            ->wrapAll('speak');
 
         $response = $this->post('/store', [
             'title' => 'Some Name',
-            'html' => $this->valid_html()]);
+            'html' => $this->valid_html()
+        ]);
 
         //assert file was created
         $this->assertFileExists(\public_path('storage/some-name.ssml'));
 
         //assertContent is saved into the file
         $content = Storage::disk('public_uploads')->get('some-name.ssml');
-        $this->assertEquals($transformer->content, $content);
+        $this->assertEquals($this->valid_ssml(), $content);
 
         $response->assertRedirect('/');
         $response->assertSessionHas('message', 'Conversion Successful!');
@@ -155,6 +157,7 @@ class SsmlFeatureTest extends TestCase
             ->appendTo('<break/>', 'h2')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms'])
+            ->wrapAll('speak')
             ->save($existingFile);
 
         //new ssml transformation
@@ -165,6 +168,7 @@ class SsmlFeatureTest extends TestCase
             ->replaceHeaders('p')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms'])
+            ->wrapAll('speak')
             ->save($newFile);
 
 
@@ -219,7 +223,17 @@ class SsmlFeatureTest extends TestCase
      */
     private function valid_html()
     {
-        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p><dd><dt>feaf</dt></dd><figure></figure>';
+        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dd><dt>feaf</dt></dd><figure></figure>';
+    }
+
+    /**
+     * Valid HTML
+     *
+     * @return string
+     */
+    private function valid_ssml()
+    {
+        return '<speak><p>Title</p><break time="800ms"></break><p>Lorem ipsum dolor  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break></speak>';
     }
 
     /**
@@ -229,7 +243,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function new_html()
     {
-        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p><dd><dt>feaf</dt></dd><figure></figure>';
+        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p><dd><dt>feaf</dt></dd><figure></figure>';
     }
 
 }
