@@ -12,6 +12,17 @@ use function public_path;
 class SSMLTransformTest extends TestCase
 {
 
+    public function test_final_output_is_wrapped_in_speak_tags()
+    {
+        $html = '<p>Some Text</p>';
+
+        $transformer = new SSMLTransformer($html);
+
+        $transformer->wrapAll('speak');
+
+        $this->assertEquals('<speak><p>Some Text</p></speak>', $transformer->content);
+    }
+
     public function test_it_can_remove_an_html_tag()
     {
         $transformer = new SSMLTransformer($this->valid_html());

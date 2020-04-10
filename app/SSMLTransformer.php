@@ -85,6 +85,13 @@ class SSMLTransformer
         return $this;
     }
 
+    public function wrapAll($tag)
+    {
+        $this->content  = "<$tag>" . $this->content . "</$tag>";
+
+        return $this;
+    }
+
     /**
      * Save a file to disk
      *
