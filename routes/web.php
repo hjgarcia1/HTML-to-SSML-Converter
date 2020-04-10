@@ -15,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index');
 
-Route::get('/converter', 'ConvertController@show');
-Route::post('/convert', 'ConvertController@transform');
-Route::get('/ssml/{id}', 'ConvertController@edit');
+Route::get('/converter', 'SsmlController@show');
+Route::post('/convert', 'SsmlController@store');
+Route::delete('/ssml/{id}', 'SsmlController@delete');

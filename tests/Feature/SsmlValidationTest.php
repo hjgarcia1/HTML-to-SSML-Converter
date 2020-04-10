@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
-class ValidationTest extends TestCase
+class SsmlValidationTest extends TestCase
 {
 
     public function test_it_the_name_field_required()

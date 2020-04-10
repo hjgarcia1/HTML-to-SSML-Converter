@@ -6,14 +6,14 @@ use App\Ssml;
 use App\SSMLTransformer;
 use Storage;
 
-class ConvertController extends Controller
+class SsmlController extends Controller
 {
     public function show()
     {
         return view('ssml.create');
     }
 
-    public function transform()
+    public function store()
     {
         $data = $this->validateData();
 
@@ -34,10 +34,16 @@ class ConvertController extends Controller
             ->with('message', 'Conversion Successful!');
     }
 
-    public function edit($id)
+    public function delete($id)
     {
         $ssml = Ssml::find($id);
-        return view('ssml.edit',compact('ssml'));
+
+        $ssml->delete();
+
+        Storage::disk('public_uploads')->delete(basename($ssml->link));
+
+        return redirect('/')
+            ->with('message', 'SSML file was deleted!');
     }
 
     /**

@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Storage;
 
-class ConvertTest extends TestCase
+class SsmlFeatureTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -19,7 +19,7 @@ class ConvertTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_we_can_load_the_converter_form()
+    public function test_we_can_show_create_form()
     {
         $response = $this->get('/converter');
 
@@ -27,7 +27,7 @@ class ConvertTest extends TestCase
         $response->assertViewIs('ssml.create');
     }
 
-    public function test_it_can_convert_the_html_to_ssml()
+    public function test_we_can_save_an_ssml()
     {
         $transformer = new SSMLTransformer($this->valid_html());
 
@@ -60,27 +60,37 @@ class ConvertTest extends TestCase
         $this->assertStringNotContainsString('<img src="somefile.img" />', $content);
     }
 
-    public function test_we_can_delete_an_ssml_file_along_with_database_record()
+    public function test_we_can_delete_an_ssml()
     {
         $transformer = new SSMLTransformer($this->valid_html());
+        $filename = $this->generateFilename('ssml file');
 
         $transformer->removeTag('br')
             ->removeTag('img')
             ->appendTo('<break/>', 'h2')
             ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms']);
+            ->appendAttr('break', ['time' => '800ms'])
+            ->save($filename);
 
         $ssml = factory(Ssml::class)->create([
             'title' => 'SSML',
-            'link' => $this->generateFilename('SSML'),
+            'link' => $this->getFilePath($filename),
+            'html' => $this->valid_html(),
             'content' => $transformer->content,
         ]);
 
-        $response = $this->get('/ssml/' . $ssml->id);
+        $response = $this->withoutExceptionHandling()->delete('/ssml/' . $ssml->id);
 
-        $response->assertOk();
-        $response->assertSee($ssml->title);
-        $response->assertSee($ssml->link);
+        $response->assertRedirect('/');
+        $response->assertSessionHas('message', 'SSML file was deleted!');
+        $this->assertDatabaseMissing('ssmls', [
+            'title' => 'SSML',
+            'link' => $this->getFilePath($filename),
+            'html' => $this->valid_html(),
+            'content' => $transformer->content,
+        ]);
+        //assert file was created
+        $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
     }
 
     /**
@@ -90,6 +100,15 @@ class ConvertTest extends TestCase
     protected function generateFilename($name): string
     {
         return \Str::slug($name) . '.ssml';
+    }
+
+    /**
+     * @param string $filename
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\UrlGenerator|string
+     */
+    protected function getFilePath(string $filename)
+    {
+        return url('storage/' . $filename);
     }
 
     /**
