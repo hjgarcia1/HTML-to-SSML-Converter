@@ -30,7 +30,17 @@
                 <td>{{ $ssml->id }}</td>
                 <td>{{ $ssml->title }}</td>
                 <td><a href="{{ $ssml->link }}" target="_blank">{{ $ssml->link }}</a></td>
-                <td></td>
+                <td>
+                    <a class="btn btn-danger btn-sm btn-flat" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $ssml->id }}').submit();">
+                        x
+                    </a>
+
+                    <form action="{{ url('/ssml/' . $ssml->id) }}" method="POST" id="delete-form-{{ $ssml->id }}" style="display: none;">
+                        {{csrf_field()}}
+                        {{ method_field('DELETE') }}
+                        <input type="hidden" value="{{ $ssml->id }}" name="id">
+                    </form>
+                </td>
             </tr>
         @endforeach
         </tbody>
