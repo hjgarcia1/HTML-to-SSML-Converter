@@ -41,6 +41,30 @@ class SSMLTransformTest extends TestCase
         $this->assertEquals('<p>String</p><break></break>', $transformer->content);
     }
 
+    public function test_we_can_remove_glossary()
+    {
+        $transformer = new SSMLTransformer($this->valid_html());
+
+        $transformer->removeTag('dt');
+        $transformer->removeTag('dd');
+
+        $this->assertEquals(0, substr_count($transformer->content, '<dt>'));
+        $this->assertEquals(0, substr_count($transformer->content, '</dt>'));
+        $this->assertEquals(0, substr_count($transformer->content, '<dd>'));
+        $this->assertEquals(0, substr_count($transformer->content, '</dd>'));
+    }
+
+    public function test_we_can_remove_all_headers_tags()
+    {
+        $transformer = new SSMLTransformer($this->valid_html());
+
+        $transformer->removeTag('h2');
+
+        $this->assertEquals(0, substr_count($transformer->content, '<h2>'));
+        $this->assertEquals(0, substr_count($transformer->content, '</h2>'));
+    }
+
+
     public function test_we_can_append_multiple_html_tags()
     {
         $transformer = new SSMLTransformer($this->valid_html());
