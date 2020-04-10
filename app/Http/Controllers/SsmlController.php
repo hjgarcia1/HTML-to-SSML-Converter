@@ -41,6 +41,13 @@ class SsmlController extends Controller
             ->with('message', 'Conversion Successful!');
     }
 
+    public function edit($id)
+    {
+        $ssml = Ssml::find($id);
+
+        return view('ssml.edit', compact('ssml'));
+    }
+
     public function delete($id)
     {
         $ssml = Ssml::find($id);

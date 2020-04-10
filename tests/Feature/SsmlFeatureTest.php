@@ -103,7 +103,7 @@ class SsmlFeatureTest extends TestCase
             'content' => $transformer->content,
         ]);
 
-        $response = $this->withoutExceptionHandling()->delete('/ssml/' . $ssml->id);
+        $response = $this->delete('/ssml/' . $ssml->id);
 
         $response->assertRedirect('/');
         $response->assertSessionHas('message', 'SSML file was deleted!');
@@ -117,10 +117,32 @@ class SsmlFeatureTest extends TestCase
         $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
     }
 
-//    public function test_we_can_edit_an_ssml()
-//    {
-//
-//    }
+    public function test_we_can_edit_an_ssml()
+    {
+        $transformer = new SSMLTransformer($this->valid_html());
+        $filename = $this->generateFilename('ssml file');
+
+        $transformer->removeTag('br')
+            ->removeTag('img')
+            ->appendTo('<break/>', 'h2')
+            ->appendTo('<break/>', 'p')
+            ->appendAttr('break', ['time' => '800ms'])
+            ->save($filename);
+
+        $ssml = factory(Ssml::class)->create([
+            'title' => 'SSML',
+            'link' => $this->getFilePath($filename),
+            'html' => $this->valid_html(),
+            'content' => $transformer->content,
+        ]);
+
+        $response = $this->get('/ssml/' . $ssml->id);
+
+        $response->assertOk();
+        $response->assertSee($ssml->title);
+        $response->assertSee($ssml->link);
+        $response->assertSee($ssml->html);
+    }
 
     /**
      * @param $name

@@ -18,7 +18,7 @@
     @include('partials.alerts')
     <div class="col-md-6 offset-md-3">
         <h1>Edit SSML</h1>
-        <form method="post" action="/convert">
+        <form method="post" action="/ssml/{{$ssml->id}}">
             {{ csrf_field() }}
 
             <div class="form-group">
@@ -27,7 +27,7 @@
             </div>
 
             <div class="form-group">
-                <p><strong>Current Link:</strong></p>
+                <p><strong>Current SSML:</strong></p>
                 <p><a href="{{ $ssml->link }}" target="_blank">{{ $ssml->link }}</a></p>
             </div>
 
@@ -36,7 +36,7 @@
                     class="form-control">{{ old('html', $ssml->html) }}</textarea>
             </div>
             {!! $errors->first('html','<div class="invalid-feedback">:message</div>') !!}
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>
 </div>

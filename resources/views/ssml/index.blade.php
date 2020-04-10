@@ -33,11 +33,15 @@
                 <td>{{ $ssml->title }}</td>
                 <td><a href="{{ $ssml->link }}" target="_blank">{{ $ssml->link }}</a></td>
                 <td>
-                    <a class="btn btn-danger btn-sm btn-flat" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $ssml->id }}').submit();">
-                        x
-                    </a>
+                    <a href="/ssml/{{$ssml->id}}" class="btn btn-secondary btn-sm btn-flat"> <i
+                            class="fa fa-pencil"></i> </a>
 
-                    <form action="{{ url('/ssml/' . $ssml->id) }}" method="POST" id="delete-form-{{ $ssml->id }}" style="display: none;">
+                    <a class="btn btn-danger btn-sm btn-flat" href="#"
+                        onclick="event.preventDefault(); document.getElementById('delete-form-{{ $ssml->id }}').submit();">
+                        <i class="fa fa-times"></i> </a>
+
+                    <form action="{{ url('/ssml/' . $ssml->id) }}" method="POST" id="delete-form-{{ $ssml->id }}"
+                        style="display: none;">
                         {{csrf_field()}}
                         {{ method_field('DELETE') }}
                         <input type="hidden" value="{{ $ssml->id }}" name="id">
