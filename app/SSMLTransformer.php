@@ -15,14 +15,17 @@ class SSMLTransformer
 
     public function appendTo($tag, $where)
     {
-        $html = '<ssml>'.$this->content.'</ssml>';
 
-        $html = \FluentDOM($html)
+
+        $html = \FluentDOM($this->content, 'text/html')
             ->find('//' . $where)
             ->append($tag);
 
-        $this->content = preg_replace('/^.+\n/', '', (string)$html->formatOutput());
-        $this->content = preg_replace('/\<\/?ssml\>\\n/', '', (string)$this->content);
+        $this->content = preg_replace('/^.+\n/', '', (string)$html);
+        $this->content = preg_replace('/<html>/', '', $this->content);
+        $this->content = preg_replace('/<body>/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/html\>\\n/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/body\>\\n/', '', (string)$this->content);
 
         $this->content = html_entity_decode($this->content);
 
@@ -33,15 +36,17 @@ class SSMLTransformer
     public function appendAttr($tag, $attr)
     {
         $firstKey = array_key_first($attr);
-        $html = '<ssml>'.$this->content.'</ssml>';
 
-        $html = \FluentDOM($html);
+        $html = \FluentDOM($this->content, 'text/html');
 
         $html->find('//' . $tag)
             ->attr[$firstKey] = $attr[$firstKey];
 
-        $this->content = preg_replace('/^.+\n/', '', (string)$html->formatOutput());
-        $this->content = preg_replace('/\<\/?ssml\>\\n/', '', (string)$this->content);
+        $this->content = preg_replace('/^.+\n/', '', (string)$html);
+        $this->content = preg_replace('/<html>/', '', $this->content);
+        $this->content = preg_replace('/<body>/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/html\>\\n/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/body\>\\n/', '', (string)$this->content);
 
         return $this;
     }
@@ -56,13 +61,17 @@ class SSMLTransformer
     {
         $html = '<ssml>'.$this->content.'</ssml>';
 
-        $html = \FluentDOM($html)
+        $html = \FluentDOM($html, 'text/html')
             ->find('//' . $tag)
             ->remove();
 
         $this->content = preg_replace('/^.+\n/', '', (string)$html);
         $this->content = preg_replace('/<ssml>/', '', (string)$this->content);
+        $this->content = preg_replace('/<html>/', '', (string)$this->content);
+        $this->content = preg_replace('/<body>/', '', (string)$this->content);
         $this->content = preg_replace('/\<\/ssml\>\\n/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/html\>\\n/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/body\>\\n/', '', (string)$this->content);
 
         return $this;
     }
