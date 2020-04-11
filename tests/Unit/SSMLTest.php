@@ -39,4 +39,17 @@ class SSMLTest extends TestCase
         $this->assertEquals('some content', $ssml->fresh()->content);
     }
 
+    public function test_it_can_get_a_file_name()
+    {
+        $filename = Ssml::getFilename('Some File');
+
+        $this->assertEquals('some-file.ssml', $filename);
+    }
+
+    public function test_it_can_get_a_file_path()
+    {
+        $path = Ssml::getFilePath(Ssml::getFilename('Some File'));
+
+        $this->assertEquals(url('storage/some-file.ssml'), $path);
+    }
 }
