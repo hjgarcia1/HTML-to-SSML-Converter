@@ -48,10 +48,12 @@
                 <td>{{ $ssml->id }}</td>
                 <td>{{ $ssml->title }}</td>
                 <td><a href="{{ $ssml->link }}" target="_blank">{{ $ssml->link }}</a></td>
-                <td>
+                <td style="width: 20%">
                     <a href="/ssml/{{$ssml->id}}" class="btn btn-secondary btn-sm btn-flat"> <i
                             class="fa fa-pencil"></i> </a>
 
+                    <a href="{{ $ssml->mp3 }}" class="btn btn-secondary btn-sm btn-flat" download target="_blank"> <i
+                            class="fa fa-file-audio-o"></i> </a>
                     <a class="btn btn-danger btn-sm btn-flat" href="#"
                         onclick="event.preventDefault(); document.getElementById('delete-form-{{ $ssml->id }}').submit();">
                         <i class="fa fa-times"></i> </a>
