@@ -65,7 +65,7 @@ class SsmlFeatureTest extends TestCase
 
         $response = $this->withoutExceptionHandling()->post('/store', [
             'title' => 'Some Name',
-            'html' => $this->valid_html()
+            'html' => $this->valid_html(),
         ]);
 
         //assert file was created
@@ -93,6 +93,7 @@ class SsmlFeatureTest extends TestCase
 
     public function test_we_can_delete_an_ssml()
     {
+        \File::copy(base_path('tests/fixtures/reading.mp3'), public_path('readings/reading.mp3'));
         $transformer = new SSMLTransformer($this->valid_html());
         $filename = $this->generateFilename('ssml file');
 
@@ -106,6 +107,7 @@ class SsmlFeatureTest extends TestCase
         $ssml = factory(Ssml::class)->create([
             'title' => 'SSML',
             'link' => $this->getFilePath($filename),
+            'mp3' => url('readings/reading.mp3'),
             'html' => $this->valid_html(),
             'content' => $transformer->content,
         ]);
@@ -122,6 +124,7 @@ class SsmlFeatureTest extends TestCase
         ]);
         //assert file was created
         $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
+        $this->assertFileNotExists(\public_path('readings/reading.mp3'));
     }
 
     public function test_we_can_edit_an_ssml()

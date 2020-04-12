@@ -67,7 +67,10 @@ return [
             'driver' => 'local',
             'root'   => public_path() . '/storage',
         ],
-
+        'reading_uploads' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/readings',
+        ],
     ],
 
     /*

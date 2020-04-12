@@ -50,7 +50,7 @@ class SsmlController extends Controller
 
         $ssml = Ssml::generate($request->get('html'), $filename);
 
-        if($ssml) {
+        if ($ssml) {
             exec("java -jar " . app_path('Converter/google-tts.jar') . " " . public_path('storage/' . $filename) . " " . public_path('readings/' . $filename . '.mp3') . " 0.87");
         }
 
@@ -118,6 +118,7 @@ class SsmlController extends Controller
 
         $ssml->delete();
 
+        Storage::disk('reading_uploads')->delete(basename($ssml->mp3));
         Storage::disk('public_uploads')->delete(basename($ssml->link));
 
         return redirect('/')
