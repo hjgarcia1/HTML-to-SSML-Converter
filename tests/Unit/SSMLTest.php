@@ -32,7 +32,6 @@ class SSMLTest extends TestCase
         $this->assertEquals('mp3', $ssml->fresh()->mp3);
     }
 
-
     public function test_it_has_an_html_field()
     {
         $ssml = factory(Ssml::class)->create(['html' => 'some html']);

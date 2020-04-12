@@ -87,6 +87,8 @@ class SsmlFeatureTest extends TestCase
         ]);
         $this->assertStringNotContainsString('<br />', $content);
         $this->assertStringNotContainsString('<img src="somefile.img" />', $content);
+
+        \File::delete(public_path('readings/some-name.ssml.mp3'));
     }
 
     public function test_we_can_delete_an_ssml()
