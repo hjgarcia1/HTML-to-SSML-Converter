@@ -7,16 +7,25 @@ use function foo\func;
 
 class SSMLTransformer
 {
+    /**
+     * @var string
+     */
     public $content = '';
+    /**
+     * @var \FluentDOM
+     */
+    public $dom;
 
     public function __construct($html)
     {
         $this->content = $html;
+
+        $this->dom = \FluentDOM($this->content, 'text/html');
     }
 
     public function appendTo($tag, $where)
     {
-        $html = \FluentDOM($this->content, 'text/html')
+        $html = $this->dom
             ->find('//' . $where)
             ->after($tag);
 
@@ -35,7 +44,7 @@ class SSMLTransformer
     {
         $firstKey = array_key_first($attr);
 
-        $html = \FluentDOM($this->content, 'text/html');
+        $html = $this->dom;
 
         $html->find('//' . $tag)
             ->attr[$firstKey] = $attr[$firstKey];
@@ -58,7 +67,7 @@ class SSMLTransformer
      */
     public function removeTag($tag)
     {
-        $html = \FluentDOM($this->content, 'text/html')
+        $html = $this->dom
             ->find('//' . $tag)
             ->remove();
 
@@ -81,6 +90,7 @@ class SSMLTransformer
     public function replaceHeaders($tag)
     {
         $this->content = preg_replace('/h[\d]{1}/', $tag, (string)$this->content);
+        $this->content = preg_replace('/<\/p><p>/', '</p><break time="1200ms"></break><p>', (string)$this->content);
 
         return $this;
     }

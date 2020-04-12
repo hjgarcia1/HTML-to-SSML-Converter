@@ -51,11 +51,12 @@ class SSMLTransformTest extends TestCase
             ->removeTag('dt')
             ->removeTag('dd')
             ->removeTag('figure')
-            ->replaceHeaders('p')
             ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
-            ->save('some-name.ssml');
+            ->appendAttr('break', ['time' => '800ms']);
 
+        $transformer->replaceHeaders('p');
+
+        $transformer->save('some-name.ssml');
 
         $content = Storage::disk('public_uploads')->get('some-name.ssml');
 
@@ -113,13 +114,15 @@ class SSMLTransformTest extends TestCase
         $html = '<h2>Title</h2><h2>Another title</h2><p>Some text</p>';
         $transformer = new SSMLTransformer($html);
 
-        $transformer->replaceHeaders('p')
-            ->appendTo('<break/>', 'p')
+        $transformer->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms']);
+
+        $transformer->replaceHeaders('p');
 
         $this->assertEquals(3, substr_count($transformer->content, '<p>'));
         $this->assertEquals(3, substr_count($transformer->content, '</p>'));
-        $this->assertEquals(3, substr_count($transformer->content, '<break time="800ms"></break>'));
+        $this->assertEquals(1, substr_count($transformer->content, '<break time="800ms"></break>'));
+        $this->assertEquals(2, substr_count($transformer->content, '<break time="1200ms"></break>'));
     }
 
 

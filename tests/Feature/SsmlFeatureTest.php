@@ -54,13 +54,14 @@ class SsmlFeatureTest extends TestCase
 
         $transformer->removeTag('br')
             ->removeTag('img')
-            ->replaceHeaders('p')
             ->removeTag('dt')
             ->removeTag('dd')
             ->removeTag('figure')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms'])
             ->wrapAll('speak');
+
+        $transformer->replaceHeaders('p');
 
         $response = $this->post('/store', [
             'title' => 'Some Name',
@@ -233,7 +234,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function valid_ssml()
     {
-        return '<speak><p>Title</p><break time="800ms"></break><p>Lorem ipsum dolor  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break></speak>';
+        return '<speak><p>Title</p><break time="1200ms"></break><p>Lorem ipsum dolor  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break></speak>';
     }
 
     /**
