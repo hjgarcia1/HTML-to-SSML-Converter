@@ -57,6 +57,9 @@ class SsmlController extends Controller
             'content' => $ssml->content,
         ]);
 
+        //create mp3
+        exec("java -jar " . app_path('Converter/google-tts.jar') . " " . public_path('storage/' . $filename) . " " . public_path('readings/' . $filename . '.mp3') . " 0.87");
+
         return redirect('/')
             ->with('link', 'Use this link to get the file: ' . Ssml::getFilePath($filename))
             ->with('message', 'Conversion Successful!');

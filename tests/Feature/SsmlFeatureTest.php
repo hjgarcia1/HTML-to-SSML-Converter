@@ -63,13 +63,15 @@ class SsmlFeatureTest extends TestCase
 
         $transformer->replaceHeaders('p');
 
-        $response = $this->post('/store', [
+        $response = $this->withoutExceptionHandling()->post('/store', [
             'title' => 'Some Name',
             'html' => $this->valid_html()
         ]);
 
         //assert file was created
         $this->assertFileExists(\public_path('storage/some-name.ssml'));
+        //assert mp3 was created
+        $this->assertFileExists(\public_path('readings/some-name.ssml.mp3'));
 
         //assertContent is saved into the file
         $content = Storage::disk('public_uploads')->get('some-name.ssml');
