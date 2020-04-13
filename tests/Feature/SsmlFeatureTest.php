@@ -102,12 +102,11 @@ class SsmlFeatureTest extends TestCase
         $transformer = $this->generateSsmlFile($filename);
         $ssml = $this->createSsml($filename, $transformer);
 
-        $response = $this->get('/ssml/' . $ssml->id);
-
-        $response->assertOk();
-        $response->assertSee($ssml->title);
-        $response->assertSee($ssml->link);
-        $response->assertSee($ssml->html);
+        $this->get('/ssml/' . $ssml->id)
+            ->assertOk()
+            ->assertSee($ssml->title)
+            ->assertSee($ssml->link)
+            ->assertSee($ssml->html);
     }
 
     public function test_we_can_update_an_ssml()
