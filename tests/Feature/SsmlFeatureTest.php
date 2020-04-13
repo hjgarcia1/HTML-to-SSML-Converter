@@ -156,6 +156,7 @@ class SsmlFeatureTest extends TestCase
 
     public function test_we_can_update_an_ssml()
     {
+        \File::copy(base_path('tests/fixtures/reading.mp3'), public_path('readings/reading.mp3'));
         //existing ssml transformation
         $transformer = new SSMLTransformer($this->valid_html());
         $existingFile = $this->generateFilename('ssml file');
@@ -183,6 +184,7 @@ class SsmlFeatureTest extends TestCase
         $ssml = factory(Ssml::class)->create([
             'title' => 'SSML',
             'link' => $this->getFilePath($existingFile),
+            'mp3' => url('readings/reading.mp3'),
             'html' => $this->valid_html(),
             'content' => $transformer->content,
         ]);
@@ -198,10 +200,13 @@ class SsmlFeatureTest extends TestCase
             'id' => $ssml->id,
             'title' => 'New Title',
             'link' => $this->getFilePath($this->generateFilename('New Title')),
+            'mp3' => url('readings/new-title.ssml.mp3'),
             'html' => $this->new_html(),
 //            'content' => $newTransformer->content,
         ]);
         $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
+        $this->assertFileExists(\public_path('readings/new-title.ssml.mp3'));
+        $this->assertFileNotExists(\public_path('readings/reading.mp3'));
         $this->assertFileExists(\public_path('storage/new-title.ssml'));
     }
 
