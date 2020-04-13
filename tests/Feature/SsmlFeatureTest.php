@@ -18,34 +18,21 @@ class SsmlFeatureTest extends TestCase
 
         parent::tearDown();
     }
-
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function test_it_loads_the_form()
+    public function test_we_can_all_ssmls()
     {
-        $ssmls = factory(Ssml::class, 20)->create();
+        $ssml = factory(Ssml::class)->create();
 
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-        $response->assertViewIs('ssml.index');
-        $ssmls->each(function ($ssml) use ($response) {
-            $response->assertSee($ssml->id);
-            $response->assertSee($ssml->title);
-            $response->assertSee($ssml->link);
-        });
+        $this->get('/')
+            ->assertStatus(200)
+            ->assertViewIs('ssml.index')
+            ->assertSee($ssml->id)
+            ->assertSee($ssml->title)
+            ->assertSee($ssml->link);
     }
-
 
     public function test_we_can_show_create_form()
     {
-        $response = $this->get('/create');
-
-        $response->assertStatus(200);
-        $response->assertViewIs('ssml.create');
+        $this->get('/create')->assertStatus(200)->assertViewIs('ssml.create');
     }
 
     public function test_we_can_save_an_ssml()
