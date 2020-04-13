@@ -53,14 +53,13 @@ class SsmlFeatureTest extends TestCase
         $transformer = new SSMLTransformer($this->valid_html());
 
         $transformer->removeTag('br')
-            ->removeTag('img')
-            ->removeTag('dt')
-            ->removeTag('dd')
             ->removeTag('figure')
+            ->removeTag('img')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms'])
             ->wrapAll('speak');
 
+        $transformer->replaceGlossary();
         $transformer->replaceHeaders('p');
 
         $response = $this->withoutExceptionHandling()->post('/store', [
@@ -236,7 +235,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function valid_html()
     {
-        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dd><dt>feaf</dt></dd><figure></figure>';
+        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure>';
     }
 
     /**
@@ -246,7 +245,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function valid_ssml()
     {
-        return '<speak><p>Title</p><break time="1200ms"></break><p>Lorem ipsum dolor  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break></speak>';
+        return '<speak><p>Title</p><break time="1200ms"></break><p>Lorem ipsum dolor  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break><p>fejiafjeaw</p><break time="800ms"></break><p>feaf</p></speak>';
     }
 
     /**
@@ -256,7 +255,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function new_html()
     {
-        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p><dd><dt>feaf</dt></dd><figure></figure>';
+        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure>';
     }
 
 }

@@ -103,14 +103,14 @@ class SSMLTransformer
      */
     public function replaceGlossary()
     {
-        $this->content = preg_replace('/<dl>/', '', (string)$this->content);
-        $this->content = preg_replace('/<\/dl>/', '', (string)$this->content);
+        $this->content = preg_replace('/<\/?dl>/', '', (string)$this->content);
 
-        $this->content = preg_replace('/<dt>/', '<p><break time="800ms"></break>', (string)$this->content);
-        $this->content = preg_replace('/<\/dt>/', '</p>', (string)$this->content);
+        $this->content = preg_replace('/(<)(\/)?dt(>)/', '$1$2p$3', (string)$this->content);
 
-        $this->content = preg_replace('/<dd style="margin-bottom: 10px;">/', '<p><break time="800ms"></break>', (string)$this->content);
-        $this->content = preg_replace('/<\/dd>/', '</p>', (string)$this->content);
+        $this->content = preg_replace('/(<)(\/)?dd(>)/', '$1$2p$3', (string)$this->content);
+        $this->content = preg_replace('/(<)(\/)?dd style="margin-bottom: 10px;"(>)/', '$1$2p$3', (string)$this->content);
+
+        $this->content = preg_replace('/<\/p><p>/', '</p><break time="800ms"></break><p>', (string)$this->content);
 
         return $this;
     }
