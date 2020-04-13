@@ -80,35 +80,16 @@ class SsmlFeatureTest extends TestCase
     public function test_we_can_delete_an_ssml()
     {
         \File::copy(base_path('tests/fixtures/reading.mp3'), public_path('readings/reading.mp3'));
-        $transformer = new SSMLTransformer($this->valid_html());
+
         $filename = $this->generateFilename('ssml file');
-
-        $transformer->removeTag('br')
-            ->removeTag('img')
-            ->appendTo('<break/>', 'h2')
-            ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
-            ->save($filename);
-
-        $ssml = factory(Ssml::class)->create([
-            'title' => 'SSML',
-            'link' => $this->getFilePath($filename),
-            'mp3' => url('readings/reading.mp3'),
-            'html' => $this->valid_html(),
-            'content' => $transformer->content,
-        ]);
+        $transformer = $this->generateSsmlFile($filename);
+        $ssml = $this->createSsml($filename, $transformer);
 
         $response = $this->delete('/ssml/' . $ssml->id);
 
         $response->assertRedirect('/');
         $response->assertSessionHas('message', 'SSML file was deleted!');
-        $this->assertDatabaseMissing('ssmls', [
-            'title' => 'SSML',
-            'link' => $this->getFilePath($filename),
-            'html' => $this->valid_html(),
-            'content' => $transformer->content,
-        ]);
-        //assert file was created
+        $this->assertDatabaseMissing('ssmls', [ 'id' => $ssml->id]);
         $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
         $this->assertFileNotExists(\public_path('readings/reading.mp3'));
     }
@@ -248,6 +229,40 @@ class SsmlFeatureTest extends TestCase
     private function new_html()
     {
         return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu</p><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure>';
+    }
+
+    /**
+     * @param string $filename
+     * @return SSMLTransformer
+     */
+    protected function generateSsmlFile(string $filename)
+    {
+        $transformer = new SSMLTransformer($this->valid_html());
+
+        $transformer->removeTag('br')
+            ->removeTag('img')
+            ->appendTo('<break/>', 'h2')
+            ->appendTo('<break/>', 'p')
+            ->appendAttr('break', ['time' => '800ms'])
+            ->save($filename);
+
+        return $transformer;
+    }
+
+    /**
+     * @param string $filename
+     * @param SSMLTransformer $transformer
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
+     */
+    protected function createSsml(string $filename, SSMLTransformer $transformer)
+    {
+        return factory(Ssml::class)->create([
+            'title' => 'SSML',
+            'link' => $this->getFilePath($filename),
+            'mp3' => url('readings/reading.mp3'),
+            'html' => $this->valid_html(),
+            'content' => $transformer->content,
+        ]);
     }
 
 }
