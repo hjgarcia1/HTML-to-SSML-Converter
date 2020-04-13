@@ -161,23 +161,28 @@ class SsmlFeatureTest extends TestCase
         $existingFile = $this->generateFilename('ssml file');
         $transformer->removeTag('br')
             ->removeTag('img')
-            ->replaceHeaders('p')
             ->appendTo('<break/>', 'h2')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms'])
-            ->wrapAll('speak')
-            ->save($existingFile);
+            ->wrapAll('speak');
+
+        $transformer->replaceGlossary()->replaceHeaders('p');
+
+        $transformer->save($existingFile);
 
         //new ssml transformation
         $newTransformer = new SSMLTransformer($this->new_html());
         $newFile = $this->generateFilename('new file');
         $newTransformer->removeTag('br')
             ->removeTag('img')
-            ->replaceHeaders('p')
+            ->appendTo('<break/>', 'h2')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms'])
-            ->wrapAll('speak')
-            ->save($newFile);
+            ->wrapAll('speak');
+
+        $newTransformer->replaceGlossary()->replaceHeaders('p');
+
+        $newTransformer->save($existingFile);
 
 
         $ssml = factory(Ssml::class)->create([
