@@ -95,6 +95,32 @@ class SSMLTransformer
         return $this;
     }
 
+    /**
+     * Replace headers
+     *
+     * @param $tag
+     * @return $this
+     */
+    public function replaceGlossary()
+    {
+        $this->content = preg_replace('/<dl>/', '', (string)$this->content);
+        $this->content = preg_replace('/<\/dl>/', '', (string)$this->content);
+
+        $this->content = preg_replace('/<dt>/', '<p><break time="800ms"></break>', (string)$this->content);
+        $this->content = preg_replace('/<\/dt>/', '</p>', (string)$this->content);
+
+        $this->content = preg_replace('/<dd style="margin-bottom: 10px;">/', '<p><break time="800ms"></break>', (string)$this->content);
+        $this->content = preg_replace('/<\/dd>/', '</p>', (string)$this->content);
+
+        return $this;
+    }
+
+    /**
+     * Wrap all content with a certain content
+     *
+     * @param $tag
+     * @return $this
+     */
     public function wrapAll($tag)
     {
         $this->content  = "<$tag>" . $this->content . "</$tag>";

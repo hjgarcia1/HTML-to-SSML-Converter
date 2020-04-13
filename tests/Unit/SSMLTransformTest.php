@@ -109,6 +109,21 @@ class SSMLTransformTest extends TestCase
         $this->assertEquals(3, substr_count($transformer->content, '</p>'));
     }
 
+    public function test_we_can_replace_all_dl_remove_dt_tags()
+    {
+        $html = '<dl> <dt><strong style="font-size: 15px;">carrion</strong></dt> <dd style="margin-bottom: 10px;">Decaying animal flesh (meat).</dd> <dt><strong style="font-size: 15px;">invertebrate</strong></dt> <dd style="margin-bottom: 10px;">An animal without a backbone. Invertebrates include insects, worms, spiders, snails, crabs, and clams. </dd> <dt><strong style="font-size: 15px;">larvae</strong></dt> <dd style="margin-bottom: 10px;">Newly hatched insects with a different body structure from the adult.</dd> <dt><strong style="font-size: 15px;">naturalist</strong></dt> <dd style="margin-bottom: 10px;">A scientist who studies plants and animals in nature.</dd> <dt><strong style="font-size: 15px;">scavengers</strong></dt> <dd style="margin-bottom: 10px;">Animals that eat dead organisms they did not kill.</dd> </dl>';
+
+        $transformer = new SSMLTransformer($html);
+
+        $transformer->replaceGlossary();
+
+        $this->assertEquals(10, substr_count($transformer->content, '<p>'));
+        $this->assertEquals(0, substr_count($transformer->content, '<dl>'));
+        $this->assertEquals(0, substr_count($transformer->content, '<dt>'));
+        $this->assertEquals(0, substr_count($transformer->content, '<dd>'));
+    }
+
+
     public function test_when_headers_are_replaced_break_and_time_attributes_uses()
     {
         $html = '<h2>Title</h2><h2>Another title</h2><p>Some text</p>';
