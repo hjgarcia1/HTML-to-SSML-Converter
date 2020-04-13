@@ -61,6 +61,9 @@ class SsmlFeatureTest extends TestCase
             ->assertSessionHas('message', 'Conversion Successful!')
             ->assertSessionHas('link', 'Use this link to get the file: ' . url('storage/some-name.ssml'));
 
+        $this->assertFileExists(\public_path('storage/some-name.ssml'));
+        $this->assertFileExists(\public_path('readings/some-name.ssml.mp3'));
+        $this->assertEquals($this->valid_ssml(), $content);
         $this->assertDatabaseHas('ssmls', [
             'title' => 'Some Name',
             'link' => url('storage/some-name.ssml'),
@@ -68,10 +71,6 @@ class SsmlFeatureTest extends TestCase
             'html' => $this->valid_html(),
             'content' => $transformer->content,
         ]);
-
-        $this->assertFileExists(\public_path('storage/some-name.ssml'));
-        $this->assertFileExists(\public_path('readings/some-name.ssml.mp3'));
-        $this->assertEquals($this->valid_ssml(), $content);
     }
 
     public function test_we_can_delete_an_ssml()
