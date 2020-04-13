@@ -20,7 +20,9 @@ class SsmlFeatureTest extends TestCase
     }
     public function test_we_can_all_ssmls()
     {
-        $ssml = factory(Ssml::class)->create();
+        $filename = $this->generateFilename('ssml file');
+        $transformer = $this->generateSsmlFile($filename);
+        $ssml = $this->createSsml($filename, $transformer);
 
         $this->get('/')
             ->assertStatus(200)
