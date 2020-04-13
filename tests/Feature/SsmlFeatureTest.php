@@ -98,22 +98,9 @@ class SsmlFeatureTest extends TestCase
 
     public function test_we_can_edit_an_ssml()
     {
-        $transformer = new SSMLTransformer($this->valid_html());
         $filename = $this->generateFilename('ssml file');
-
-        $transformer->removeTag('br')
-            ->removeTag('img')
-            ->appendTo('<break/>', 'h2')
-            ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
-            ->save($filename);
-
-        $ssml = factory(Ssml::class)->create([
-            'title' => 'SSML',
-            'link' => $this->getFilePath($filename),
-            'html' => $this->valid_html(),
-            'content' => $transformer->content,
-        ]);
+        $transformer = $this->generateSsmlFile($filename);
+        $ssml = $this->createSsml($filename, $transformer);
 
         $response = $this->get('/ssml/' . $ssml->id);
 
