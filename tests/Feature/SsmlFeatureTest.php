@@ -15,6 +15,13 @@ class SsmlFeatureTest extends TestCase
     public function tearDown(): void
     {
         Storage::disk('public_uploads')->delete('file.ssml');
+        \File::delete(public_path('readings/some-name.ssml.mp3'));
+        \File::delete(public_path('storage/some-name.ssml'));
+        \File::delete(public_path('storage/new-file.ssml'));
+        \File::delete(public_path('readings/new-title.ssml.mp3'));
+        \File::delete(public_path('storage/new-title.ssml'));
+        \File::delete(public_path('storage/ssml-file.ssml'));
+        \File::delete(public_path('readings/some-name.ssml.mp3'));
 
         parent::tearDown();
     }
@@ -39,19 +46,10 @@ class SsmlFeatureTest extends TestCase
 
     public function test_we_can_save_an_ssml()
     {
-        $transformer = new SSMLTransformer($this->valid_html());
+        $filename = $this->generateFilename('ssml file');
+        $transformer = $this->generateSsmlFile($filename);
 
-        $transformer->removeTag('br')
-            ->removeTag('figure')
-            ->removeTag('img')
-            ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
-            ->wrapAll('speak');
-
-        $transformer->replaceGlossary();
-        $transformer->replaceHeaders('p');
-
-        $response = $this->withoutExceptionHandling()->post('/store', [
+        $response = $this->post('/store', [
             'title' => 'Some Name',
             'html' => $this->valid_html(),
         ]);
@@ -75,8 +73,6 @@ class SsmlFeatureTest extends TestCase
         ]);
         $this->assertStringNotContainsString('<br />', $content);
         $this->assertStringNotContainsString('<img src="somefile.img" />', $content);
-
-        \File::delete(public_path('readings/some-name.ssml.mp3'));
     }
 
     public function test_we_can_delete_an_ssml()
@@ -228,11 +224,16 @@ class SsmlFeatureTest extends TestCase
         $transformer = new SSMLTransformer($this->valid_html());
 
         $transformer->removeTag('br')
+            ->removeTag('figure')
             ->removeTag('img')
-            ->appendTo('<break/>', 'h2')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms'])
-            ->save($filename);
+            ->wrapAll('speak');
+
+        $transformer->replaceGlossary();
+        $transformer->replaceHeaders('p');
+
+        $transformer->save($filename);
 
         return $transformer;
     }
