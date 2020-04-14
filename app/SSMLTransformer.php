@@ -90,7 +90,7 @@ class SSMLTransformer
     public function replaceLists()
     {
         $this->content = preg_replace('/(<)li(>)/', '$1p$2', (string)$this->content);
-        $this->content = preg_replace('/(<)\/li(>)/', '$1p$2' . '<break time="800ms"></break>', (string)$this->content);
+        $this->content = preg_replace('/(<\/)li(>)/', '$1p$2' . '<break time="800ms"></break>', (string)$this->content);
         $this->content = preg_replace('/(<)(\/)?ul(>)/', '', (string)$this->content);
 
         return $this;
@@ -121,12 +121,12 @@ class SSMLTransformer
     {
         $this->content = preg_replace('/<\/?dl>/', '', (string)$this->content);
 
-        $this->content = preg_replace('/(<)(\/)?dt(>)/', '$1$2p$3', (string)$this->content);
+        $this->content = preg_replace('/(<)dt(>)/', '$1p$2', (string)$this->content);
+        $this->content = preg_replace('/(<\/)dt(>)/', '$1p$2' . '<break time="800ms"></break>', (string)$this->content);
 
-        $this->content = preg_replace('/(<)(\/)?dd(>)/', '$1$2p$3', (string)$this->content);
-        $this->content = preg_replace('/(<)(\/)?dd style="margin-bottom: 10px;"(>)/', '$1$2p$3', (string)$this->content);
-
-        $this->content = preg_replace('/<\/p><p>/', '</p><break time="800ms"></break><p>', (string)$this->content);
+        $this->content = preg_replace('/(<)dd(>)/', '$1p$2', (string)$this->content);
+        $this->content = preg_replace('/(<)dd style="margin-bottom: 10px;"(>)/', '$1p$2', (string)$this->content);
+        $this->content = preg_replace('/(<\/)dd(>)/', '$1p$2' . '<break time="800ms"></break>', (string)$this->content);
 
         return $this;
     }

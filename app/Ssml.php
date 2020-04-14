@@ -54,6 +54,8 @@ class Ssml extends \Eloquent
         $ssml
             ->removeTag('br')
             ->removeTag('table')
+            ->removeTag('strong')
+            ->removeTag('em')
             ->removeTag('img')
             ->removeTag('figure')
             ->appendTo('<break />', 'p')
@@ -61,6 +63,7 @@ class Ssml extends \Eloquent
             ->wrapAll('speak');
 
         $ssml->replaceHeaders('p')
+            ->replaceLists()
             ->replaceGlossary()
             ->replaceApostrophes();
 
