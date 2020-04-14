@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Support\Facades\Storage;
-use function foo\func;
 
 class SSMLTransformer
 {

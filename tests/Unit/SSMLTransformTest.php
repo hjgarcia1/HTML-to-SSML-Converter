@@ -26,7 +26,7 @@ class SSMLTransformTest extends TestCase
 
         $transformer->replaceLists();
 
-        $this->assertStringContainsString('<p>some list text<p><break time="800ms"></break>', $transformer->content);
+        $this->assertStringContainsString('<p>some list text</p><break time="800ms"></break>', $transformer->content);
     }
 
     public function test_it_removes_strong_tags()
