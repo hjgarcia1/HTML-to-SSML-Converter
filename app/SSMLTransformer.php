@@ -81,6 +81,32 @@ class SSMLTransformer
     }
 
     /**
+     * Replace strong
+     *
+     * @param $tag
+     * @return $this
+     */
+    public function replaceStrong()
+    {
+        $this->content = preg_replace('/(<)(\/)?strong(>)/', '', (string)$this->content);
+
+        return $this;
+    }
+
+    /**
+     * Replace emphasis
+     *
+     * @param $tag
+     * @return $this
+     */
+    public function replaceEmphasis()
+    {
+        $this->content = preg_replace('/(<)(\/)?em(>)/', '', (string)$this->content);
+
+        return $this;
+    }
+
+    /**
      * Replace lists
      *
      * @param $tag
