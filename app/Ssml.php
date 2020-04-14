@@ -60,7 +60,9 @@ class Ssml extends \Eloquent
             ->appendAttr('break', ['time' => '800ms'])
             ->wrapAll('speak');
 
-        $ssml->replaceHeaders('p')->replaceGlossary();
+        $ssml->replaceHeaders('p')
+            ->replaceGlossary()
+            ->replaceApostrophes();
 
         $ssml->save($filename);
 

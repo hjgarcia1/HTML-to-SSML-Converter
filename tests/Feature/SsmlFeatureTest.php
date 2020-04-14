@@ -25,6 +25,7 @@ class SsmlFeatureTest extends TestCase
 
         parent::tearDown();
     }
+
     public function test_we_can_all_ssmls()
     {
         $filename = $this->generateFilename('ssml file');
@@ -189,7 +190,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function valid_html()
     {
-        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table>';
+        return '<h2>Title</h2><p>Lore’m ipsum dolo’r <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table>';
     }
 
     /**
@@ -199,7 +200,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function valid_ssml()
     {
-        return '<speak><p>Title</p><break time="1200ms"></break><p>Lorem ipsum dolor  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break><p>fejiafjeaw</p><break time="800ms"></break><p>feaf</p></speak>';
+        return '<speak><p>Title</p><break time="1200ms"></break><p>Lore&apos;m ipsum dolo&apos;r  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break><p>fejiafjeaw</p><break time="800ms"></break><p>feaf</p></speak>';
     }
 
     /**
@@ -228,6 +229,7 @@ class SsmlFeatureTest extends TestCase
             ->appendAttr('break', ['time' => '800ms'])
             ->wrapAll('speak');
 
+        $transformer->replaceApostrophes();
         $transformer->replaceGlossary();
         $transformer->replaceHeaders('p');
 
