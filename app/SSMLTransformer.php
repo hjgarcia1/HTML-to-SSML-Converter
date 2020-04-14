@@ -116,6 +116,14 @@ class SSMLTransformer
     }
 
     /**
+     * Remove ap
+     */
+    public function replaceApostrophes()
+    {
+        $this->content = preg_replace('/’/', '&apos;', (string)$this->content);
+    }
+
+    /**
      * Wrap all content with a certain content
      *
      * @param $tag
