@@ -82,6 +82,22 @@ class SSMLTransformer
     }
 
     /**
+     * Replace lists
+     *
+     * @param $tag
+     * @return $this
+     */
+    public function replaceLists()
+    {
+        $this->content = preg_replace('/(<)li(>)/', '$1p$2', (string)$this->content);
+        $this->content = preg_replace('/(<)\/li(>)/', '$1p$2' . '<break time="800ms"></break>', (string)$this->content);
+        $this->content = preg_replace('/(<)(\/)?ul(>)/', '', (string)$this->content);
+
+        return $this;
+    }
+
+
+    /**
      * Replace headers
      *
      * @param $tag
