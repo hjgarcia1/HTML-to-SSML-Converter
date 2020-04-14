@@ -11,13 +11,21 @@ use function public_path;
 
 class SSMLTransformTest extends TestCase
 {
-    public function test_it_can_replace_aphostraphes()
+    public function test_it_can_replace_apostrophes()
     {
         $transformer = new SSMLTransformer($this->valid_html());
 
         $transformer->replaceApostrophes();
 
         $this->assertStringContainsString('&apos;', $transformer->content);
+    }
+
+    public function it_can_remove_table_tags()
+    {
+        $transformer = new SSMLTransformer($this->valid_html());
+
+        $transformer->removeTag('table');
+        $this->assertStringNotContainsString('<table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table>', $transformer->content);
     }
 
     public function test_final_output_is_wrapped_in_speak_tags()
@@ -199,7 +207,7 @@ class SSMLTransformTest extends TestCase
 
     protected function valid_html()
     {
-        return '<h2>Meerkat</h2>  <br><figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-01.jpg"          alt="Meerkat" width="650"></figure>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-02.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkat’s live in dry deserts or grasslands. They live in groups with other meerkats.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-03.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkat’s take turns standing guard. They watch for bigger animals. This helps keep the group safe.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-04.jpg"          alt="Meerkats" width="650"></figure>  <p>Then other meerkats in the group can eat, rest, or play.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-05.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats eat insects and other small animals. They also eat plants. This meerkat is eating a grasshopper.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-06.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats get water wherever they can find it. This meerkat is drinking from a tiny puddle.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-07.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats make their homes by digging into the ground.</p>  <p>Their underground homes are called burrows.</p>  <p>Burrows give them shade and a safe place to sleep.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-08.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats find everything they need in the places where they live.</p>';
+        return '<h2>Meerkat</h2>  <br><figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-01.jpg"          alt="Meerkat" width="650"></figure>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-02.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkat’s live in dry deserts or grasslands. They live in groups with other meerkats.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-03.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkat’s take turns standing guard. They watch for bigger animals. This helps keep the group safe.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-04.jpg"          alt="Meerkats" width="650"></figure>  <p>Then other meerkats in the group can eat, rest, or play.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-05.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats eat insects and other small animals. They also eat plants. This meerkat is eating a grasshopper.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-06.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats get water wherever they can find it. This meerkat is drinking from a tiny puddle.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-07.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats make their homes by digging into the ground.</p>  <p>Their underground homes are called burrows.</p>  <p>Burrows give them shade and a safe place to sleep.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-08.jpg"          alt="Meerkats" width="650"></figure> <table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table> <p>Meerkats find everything they need in the places where they live.</p>';
     }
 
     public function tearDown(): void
