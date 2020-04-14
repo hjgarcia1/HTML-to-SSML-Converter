@@ -189,7 +189,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function valid_html()
     {
-        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure>';
+        return '<h2>Title</h2><p>Lorem ipsum dolor <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table>';
     }
 
     /**
@@ -223,6 +223,7 @@ class SsmlFeatureTest extends TestCase
         $transformer->removeTag('br')
             ->removeTag('figure')
             ->removeTag('img')
+            ->removeTag('table')
             ->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms'])
             ->wrapAll('speak');

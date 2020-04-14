@@ -53,6 +53,7 @@ class Ssml extends \Eloquent
 
         $ssml
             ->removeTag('br')
+            ->removeTag('table')
             ->removeTag('img')
             ->removeTag('figure')
             ->appendTo('<break />', 'p')
