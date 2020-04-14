@@ -143,13 +143,16 @@ class SsmlFeatureTest extends TestCase
             'content' => $transformer->content,
         ]);
 
-        $response = $this->post('/ssml/' . $ssml->id, [
+        $this->post('/ssml/' . $ssml->id, [
             'title' => 'New Title',
             'link' => $this->getFilePath($newFile),
             'html' => $this->new_html(),
-        ]);
+        ])->assertRedirect('/ssml/' . $ssml->id);
 
-        $response->assertRedirect('/ssml/' . $ssml->id);
+        $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
+        $this->assertFileExists(\public_path('readings/new-title.ssml.mp3'));
+        $this->assertFileNotExists(\public_path('readings/reading.mp3'));
+        $this->assertFileExists(\public_path('storage/new-title.ssml'));
         $this->assertDatabaseHas('ssmls', [
             'id' => $ssml->id,
             'title' => 'New Title',
@@ -158,10 +161,6 @@ class SsmlFeatureTest extends TestCase
             'html' => $this->new_html(),
 //            'content' => $newTransformer->content,
         ]);
-        $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
-        $this->assertFileExists(\public_path('readings/new-title.ssml.mp3'));
-        $this->assertFileNotExists(\public_path('readings/reading.mp3'));
-        $this->assertFileExists(\public_path('storage/new-title.ssml'));
     }
 
 
