@@ -138,6 +138,12 @@ class SSMLTransformer
         $this->content = preg_replace('/’/', '&apos;', (string)$this->content);
     }
 
+    public function replaceDashes()
+    {
+        $this->content = preg_replace('/-/', '&ndash;', (string)$this->content);
+        $this->content = preg_replace('/—/', '&mdash;', (string)$this->content);
+    }
+
     /**
      * Wrap all content with a certain content
      *
