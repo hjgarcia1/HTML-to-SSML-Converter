@@ -65,7 +65,8 @@ class Ssml extends \Eloquent
         $ssml->replaceHeaders('p')
             ->replaceLists()
             ->replaceGlossary()
-            ->replaceApostrophes();
+            ->replaceApostrophes()
+            ->replaceDashes();
 
         $ssml->save($filename);
 

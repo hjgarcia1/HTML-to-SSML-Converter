@@ -136,12 +136,16 @@ class SSMLTransformer
     public function replaceApostrophes()
     {
         $this->content = preg_replace('/’/', '&apos;', (string)$this->content);
+
+        return $this;
     }
 
     public function replaceDashes()
     {
         $this->content = preg_replace('/-/', '&ndash;', (string)$this->content);
         $this->content = preg_replace('/—/', '&mdash;', (string)$this->content);
+
+        return $this;
     }
 
     /**
