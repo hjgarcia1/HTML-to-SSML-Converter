@@ -7,10 +7,13 @@ use App\SSMLTransformer;
 use Storage;
 use Str;
 use Tests\TestCase;
+use Tests\Traits\ContentTrait;
 use function public_path;
 
 class SSMLTransformTest extends TestCase
 {
+    use ContentTrait;
+
     public function test_it_can_replace_dash()
     {
         $transformer = new SSMLTransformer($this->valid_html());
@@ -19,6 +22,7 @@ class SSMLTransformTest extends TestCase
 
         $this->assertStringNotContainsString('-', $transformer->content);
         $this->assertStringNotContainsString('—', $transformer->content);
+        $this->assertStringContainsString('<break time="500ms"></break>', $transformer->content);
     }
 
     public function test_it_can_replace_apostrophes()
@@ -252,26 +256,6 @@ class SSMLTransformTest extends TestCase
 
         $this->assertFileExists(public_path('storage/file.ssml'));
         $this->assertEquals($transformer->content, Storage::disk('public_uploads')->get('file.ssml'));
-    }
-
-    /**
-     * Valid HTML
-     *
-     * @return string
-     */
-    private function valid_html()
-    {
-        return '<h2>Title</h2><p>Lore’m ipsum dolo’r <br /> sit amet, “consectetuer” adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table><p><strong>Some strong text</strong></p><p><em>Some Emphasis text</em></p><ul><li>some list text</li></ul>- —';
-    }
-
-    /**
-     * Valid HTML
-     *
-     * @return string
-     */
-    private function valid_ssml()
-    {
-        return '<speak><p>Title</p><break time="1200ms"></break><p>Lore&apos;m ipsum dolo&apos;r  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break><p>fejiafjeaw</p><break time="800ms"></break><p>feaf</p><break time="800ms"></break><p>Some strong text</p><break time="800ms"><p>Some Emphasis text</p><break time="800ms"><p>some list text</p><break time="800ms"></break><p>Some strong text</p><p>Some Emphasis text</p>&ndash; &mdash;</speak>';
     }
 
     public function tearDown(): void

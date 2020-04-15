@@ -54,18 +54,20 @@ class Ssml extends \Eloquent
         $ssml
             ->removeTag('br')
             ->removeTag('table')
-            ->removeTag('strong')
-            ->removeTag('em')
             ->removeTag('img')
             ->removeTag('figure')
             ->appendTo('<break />', 'p')
             ->appendAttr('break', ['time' => '800ms'])
             ->wrapAll('speak');
 
-        $ssml->replaceHeaders('p')
+        $ssml
+            ->replaceHeaders()
+            ->replaceEmphasis()
+            ->replaceStrong()
             ->replaceLists()
             ->replaceGlossary()
             ->replaceApostrophes()
+            ->replaceQuotes()
             ->replaceDashes();
 
         $ssml->save($filename);

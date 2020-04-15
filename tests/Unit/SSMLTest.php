@@ -5,11 +5,13 @@ namespace Tests\Unit;
 
 use App\Ssml;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Storage;
 use Tests\TestCase;
+use Tests\Traits\ContentTrait;
 
 class SSMLTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, ContentTrait;
 
     public function test_it_has_a_title_field()
     {
@@ -58,5 +60,15 @@ class SSMLTest extends TestCase
         $path = Ssml::getFilePath(Ssml::getFilename('Some File'));
 
         $this->assertEquals(url('storage/some-file.ssml'), $path);
+    }
+
+    public function test_it_can_generate_an_ssml_file()
+    {
+        $ssml = Ssml::generate($this->valid_html(), 'some-file.ssml');
+
+        $fileContent = Storage::disk('public_uploads')->get('some-file.ssml');
+
+        $this->assertFileExists(public_path('storage/some-file.ssml'));
+        $this->assertEquals($this->valid_ssml(), $fileContent);
     }
 }

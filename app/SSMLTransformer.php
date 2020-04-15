@@ -167,8 +167,8 @@ class SSMLTransformer
 
     public function replaceDashes()
     {
-        $this->content = preg_replace('/-/', ' ', (string)$this->content);
-        $this->content = preg_replace('/—/', ' ', (string)$this->content);
+        $this->content = preg_replace('/-/', '<break time="500ms"></break>', (string)$this->content);
+        $this->content = preg_replace('/—/', '<break time="500ms"></break>', (string)$this->content);
 
         return $this;
     }
