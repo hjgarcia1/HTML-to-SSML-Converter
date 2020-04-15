@@ -26,11 +26,12 @@ class SsmlFeatureTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_we_can_all_ssmls()
+    public function test_we_can_see_all_ssmls()
     {
-        $filename = $this->generateFilename('ssml file');
-        $transformer = $this->generateSsmlFile($filename);
-        $ssml = $this->createSsml($filename, $transformer);
+        $ssml = factory(Ssml::class)->create([
+            'title' => 'SSML',
+            'link' => Ssml::getFilePath('some-file.ssml'),
+        ]);
 
         $this->get('/')
             ->assertStatus(200)
@@ -71,7 +72,7 @@ class SsmlFeatureTest extends TestCase
     {
         \File::copy(base_path('tests/fixtures/reading.mp3'), public_path('readings/reading.mp3'));
 
-        $filename = $this->generateFilename('ssml file');
+        $filename = Ssml::getFilename('ssml file');
         $transformer = $this->generateSsmlFile($filename);
         $ssml = $this->createSsml($filename, $transformer);
 
@@ -86,7 +87,7 @@ class SsmlFeatureTest extends TestCase
 
     public function test_we_can_edit_an_ssml()
     {
-        $filename = $this->generateFilename('ssml file');
+        $filename = Ssml::getFilename('ssml file');
         $transformer = $this->generateSsmlFile($filename);
         $ssml = $this->createSsml($filename, $transformer);
 
@@ -100,80 +101,37 @@ class SsmlFeatureTest extends TestCase
     public function test_we_can_update_an_ssml()
     {
         \File::copy(base_path('tests/fixtures/reading.mp3'), public_path('readings/reading.mp3'));
-        //existing ssml transformation
-        $transformer = new SSMLTransformer($this->valid_html());
-        $existingFile = $this->generateFilename('ssml file');
-        $transformer->removeTag('br')
-            ->removeTag('img')
-            ->appendTo('<break/>', 'h2')
-            ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
-            ->wrapAll('speak');
-
-        $transformer->replaceGlossary()->replaceHeaders('p');
-
-        $transformer->save($existingFile);
-
-        //new ssml transformation
-        $newTransformer = new SSMLTransformer($this->new_html());
-        $newFile = $this->generateFilename('new file');
-        $newTransformer->removeTag('br')
-            ->removeTag('img')
-            ->appendTo('<break/>', 'h2')
-            ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
-            ->wrapAll('speak');
-
-        $newTransformer->replaceGlossary()->replaceHeaders('p');
-
-        $newTransformer->save($existingFile);
-
+        $existingFile = Ssml::getFilename('ssml file');
+        $newFile = Ssml::getFilename('new ssml file');
+        $ssml = Ssml::generate($this->valid_html(), $existingFile);
+        $newSsml = Ssml::generate($this->new_html(), $newFile);
 
         $ssml = factory(Ssml::class)->create([
             'title' => 'SSML',
-            'link' => $this->getFilePath($existingFile),
+            'link' => Ssml::getFilePath($existingFile),
             'mp3' => url('readings/reading.mp3'),
             'html' => $this->valid_html(),
-            'content' => $transformer->content,
+            'content' => $ssml->content,
         ]);
 
         $this->post('/ssml/' . $ssml->id, [
             'title' => 'New Title',
-            'link' => $this->getFilePath($newFile),
+            'link' => Ssml::getFilePath($newFile),
             'html' => $this->new_html(),
         ])->assertRedirect('/ssml/' . $ssml->id);
 
         $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
-        $this->assertFileExists(\public_path('readings/new-title.ssml.mp3'));
         $this->assertFileNotExists(\public_path('readings/reading.mp3'));
         $this->assertFileExists(\public_path('storage/new-title.ssml'));
+        $this->assertFileExists(\public_path('readings/new-title.ssml.mp3'));
         $this->assertDatabaseHas('ssmls', [
             'id' => $ssml->id,
             'title' => 'New Title',
-            'link' => $this->getFilePath($this->generateFilename('New Title')),
+            'link' => Ssml::getFilePath(Ssml::getFilename('New Title')),
             'mp3' => url('readings/new-title.ssml.mp3'),
             'html' => $this->new_html(),
-//            'content' => $newTransformer->content,
+            'content' => $newSsml->content
         ]);
-    }
-
-
-    /**
-     * @param $name
-     * @return string
-     */
-    protected function generateFilename($name): string
-    {
-        return \Str::slug($name) . '.ssml';
-    }
-
-    /**
-     * @param string $filename
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\UrlGenerator|string
-     */
-    protected function getFilePath(string $filename)
-    {
-        return url('storage/' . $filename);
     }
 
     /**
@@ -244,7 +202,7 @@ class SsmlFeatureTest extends TestCase
     {
         return factory(Ssml::class)->create([
             'title' => 'SSML',
-            'link' => $this->getFilePath($filename),
+            'link' => Ssml::getFilePath($filename),
             'mp3' => url('readings/reading.mp3'),
             'html' => $this->valid_html(),
             'content' => $transformer->content,
