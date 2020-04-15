@@ -86,13 +86,12 @@ class SSMLTransformTest extends TestCase
 
     public function test_final_output_is_wrapped_in_speak_tags()
     {
-        $html = '<p>Some Text</p>';
-
-        $transformer = new SSMLTransformer($html);
+        $transformer = new SSMLTransformer($this->valid_html());
 
         $transformer->wrapAll('speak');
 
-        $this->assertEquals('<speak><p>Some Text</p></speak>', $transformer->content);
+        $this->assertStringContainsString('<speak>', $transformer->content);
+        $this->assertStringContainsString('</speak>', $transformer->content);
     }
 
     public function test_it_can_remove_an_html_tag()
@@ -114,47 +113,13 @@ class SSMLTransformTest extends TestCase
         $this->assertEquals(0, substr_count($transformer->content, '<img src="#" alt="#"/>'));
     }
 
-    public function test_we_are_removing_extra_elements()
+    public function test_we_can_append_an_html_tag()
     {
         $transformer = new SSMLTransformer($this->valid_html());
 
-        $transformer->removeTag('br')
-            ->removeTag('img')
-            ->removeTag('dt')
-            ->removeTag('dd')
-            ->removeTag('figure')
-            ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms']);
-
-        $transformer->replaceHeaders('p');
-
-        $transformer->save('some-name.ssml');
-
-        $content = Storage::disk('public_uploads')->get('some-name.ssml');
-
-        $this->assertEquals($transformer->content, $content);
-        $this->assertEquals(0, substr_count($transformer->content, '<figure>'));
-        $this->assertEquals(0, substr_count($transformer->content, '</figure>'));
-        $this->assertEquals(0, substr_count($transformer->content, '<h2>'));
-        $this->assertEquals(0, substr_count($transformer->content, '</h2>'));
-        $this->assertEquals(0, substr_count($transformer->content, '<dt>'));
-        $this->assertEquals(0, substr_count($transformer->content, '</dt>'));
-        $this->assertEquals(0, substr_count($transformer->content, '<dd>'));
-        $this->assertEquals(0, substr_count($transformer->content, '</dd>'));
-        $this->assertEquals(0, substr_count($transformer->content, '<body>'));
-        $this->assertEquals(0, substr_count($transformer->content, '</body>'));
-        $this->assertEquals(0, substr_count($transformer->content, '<html>'));
-        $this->assertEquals(0, substr_count($transformer->content, '</html>'));
-    }
-
-    public function test_we_can_append_an_html_tag()
-    {
-        $html = '<p>String</p>';
-        $transformer = new SSMLTransformer($html);
-
         $transformer->appendTo('<break/>', 'p');
 
-        $this->assertEquals('<p>String</p><break></break>', $transformer->content);
+        $this->assertStringContainsString('<break></break>', $transformer->content);
     }
 
     public function test_we_can_remove_glossary()
@@ -172,13 +137,11 @@ class SSMLTransformTest extends TestCase
 
     public function test_we_can_replace_all_headers_tags()
     {
-        $html = '<h2>Title</h2><h2>Another title</h2><p>Some text</p>';
-        $transformer = new SSMLTransformer($html);
+        $transformer = new SSMLTransformer($this->valid_html());
 
-        $transformer->replaceHeaders('p');
+        $transformer->replaceHeaders();
 
-        $this->assertEquals(3, substr_count($transformer->content, '<p>'));
-        $this->assertEquals(3, substr_count($transformer->content, '</p>'));
+        $this->assertStringContainsString('<p>People Doing Science</p><break time="1200ms"></break><p>The Garbage Project</p><break time="1200ms"></break>', $transformer->content);
     }
 
     public function test_we_can_replace_all_dl_remove_dt_tags()
@@ -198,18 +161,15 @@ class SSMLTransformTest extends TestCase
 
     public function test_when_headers_are_replaced_break_and_time_attributes_uses()
     {
-        $html = '<h2>Title</h2><h2>Another title</h2><p>Some text</p>';
-        $transformer = new SSMLTransformer($html);
+        $transformer = new SSMLTransformer($this->valid_html());
 
         $transformer->appendTo('<break/>', 'p')
             ->appendAttr('break', ['time' => '800ms']);
 
-        $transformer->replaceHeaders('p');
+        $transformer->replaceHeaders();
 
-        $this->assertEquals(3, substr_count($transformer->content, '<p>'));
-        $this->assertEquals(3, substr_count($transformer->content, '</p>'));
-        $this->assertEquals(1, substr_count($transformer->content, '<break time="800ms"></break>'));
-        $this->assertEquals(2, substr_count($transformer->content, '<break time="1200ms"></break>'));
+        $this->assertStringContainsString( '<break time="800ms"></break>', $transformer->content);
+        $this->assertStringContainsString( '<break time="1200ms"></break>', $transformer->content);
     }
 
 
