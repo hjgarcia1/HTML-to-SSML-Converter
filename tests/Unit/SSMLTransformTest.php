@@ -17,8 +17,6 @@ class SSMLTransformTest extends TestCase
 
         $transformer->replaceDashes();
 
-        $this->assertStringContainsString('&ndash;', $transformer->content);
-        $this->assertStringContainsString('&mdash;', $transformer->content);
         $this->assertStringNotContainsString('-', $transformer->content);
         $this->assertStringNotContainsString('—', $transformer->content);
     }
