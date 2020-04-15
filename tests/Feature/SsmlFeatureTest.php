@@ -47,16 +47,10 @@ class SsmlFeatureTest extends TestCase
 
     public function test_we_can_save_an_ssml()
     {
-        $filename = $this->generateFilename('ssml file');
-        $transformer = $this->generateSsmlFile($filename);
-
         $response = $this->post('/store', [
             'title' => 'Some Name',
             'html' => $this->valid_html(),
         ]);
-
-
-        $content = Storage::disk('public_uploads')->get('some-name.ssml');
 
         $response->assertRedirect('/')
             ->assertSessionHas('message', 'Conversion Successful!')
@@ -64,13 +58,12 @@ class SsmlFeatureTest extends TestCase
 
         $this->assertFileExists(\public_path('storage/some-name.ssml'));
         $this->assertFileExists(\public_path('readings/some-name.ssml.mp3'));
-        $this->assertEquals($this->valid_ssml(), $content);
         $this->assertDatabaseHas('ssmls', [
             'title' => 'Some Name',
             'link' => url('storage/some-name.ssml'),
             'mp3' => url('readings/some-name.ssml.mp3'),
             'html' => $this->valid_html(),
-            'content' => $transformer->content,
+            'content' => Storage::disk('public_uploads')->get('some-name.ssml'),
         ]);
     }
 
@@ -190,7 +183,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function valid_html()
     {
-        return '<h2>Title</h2><p>Lore’m ipsum dolo’r <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table><strong></strong><em></em><ul><li>some list text</li></ul>- —';
+        return '<h2>Title</h2><p>Lore’m ipsum dolo’r <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table><p><strong>Some strong text</strong></p><p><em>Some Emphasis text</em></p><ul><li>some list text</li></ul>- —';
     }
 
     /**
@@ -200,7 +193,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function valid_ssml()
     {
-        return '<speak><p>Title</p><break time="1200ms"></break><p>Lore&apos;m ipsum dolo&apos;r  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break><p>fejiafjeaw</p><break time="800ms"></break><p>feaf</p><break time="800ms"></break><p>some list text</p><break time="800ms"></break>&ndash; &mdash;</speak>';
+        return '<speak><p>Title</p><break time="1200ms"></break><p>Lore&apos;m ipsum dolo&apos;r  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break><p>fejiafjeaw</p><break time="800ms"></break><p>feaf</p><break time="800ms"></break><p>Some strong text</p><break time="800ms"><p>Some Emphasis text</p><break time="800ms"><p>some list text</p><break time="800ms"></break><p>Some strong text</p><p>Some Emphasis text</p>&ndash; &mdash;</speak>';
     }
 
     /**
@@ -210,7 +203,7 @@ class SsmlFeatureTest extends TestCase
      */
     private function new_html()
     {
-        return '<h2>New Title</h2><p>Lore’m ipsum dolo’r <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table><strong></strong><em></em><ul><li>some list text</li></ul>- —';
+        return '<h2>New Title</h2><p>Lore’m ipsum dolo’r <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table><p><strong>Some strong text</strong></p><p><em>Some Emphasis text</em></p><ul><li>some list text</li></ul>- —';
     }
 
     /**
