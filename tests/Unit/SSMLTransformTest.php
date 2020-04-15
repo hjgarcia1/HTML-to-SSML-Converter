@@ -30,6 +30,16 @@ class SSMLTransformTest extends TestCase
         $this->assertStringContainsString('&apos;', $transformer->content);
     }
 
+    public function test_it_can_replace_quotes()
+    {
+        $transformer = new SSMLTransformer($this->valid_html());
+
+        $transformer->replaceQuotes();
+
+        $this->assertStringNotContainsString('“', $transformer->content);
+        $this->assertStringNotContainsString('”', $transformer->content);
+    }
+
     public function test_it_replaces_li_tags()
     {
         $transformer = new SSMLTransformer($this->valid_html());
@@ -47,7 +57,7 @@ class SSMLTransformTest extends TestCase
 
         $this->assertStringNotContainsString('<strong>', $transformer->content);
         $this->assertStringNotContainsString('</strong>', $transformer->content);
-        $this->assertStringContainsString('Strong tag content', $transformer->content);
+        $this->assertStringContainsString('Some strong text', $transformer->content);
     }
 
     public function test_it_replaces_em_tags()
@@ -58,7 +68,7 @@ class SSMLTransformTest extends TestCase
 
         $this->assertStringNotContainsString('<em>', $transformer->content);
         $this->assertStringNotContainsString('</em>', $transformer->content);
-        $this->assertStringContainsString('Em tag content', $transformer->content);
+        $this->assertStringContainsString('Some Emphasis text', $transformer->content);
 
     }
 
@@ -241,15 +251,27 @@ class SSMLTransformTest extends TestCase
             ->save('file.ssml');
 
         $this->assertFileExists(public_path('storage/file.ssml'));
-        //assertContent is saved into the file
-        $content = Storage::disk('public_uploads')->get('file.ssml');
-
-        $this->assertStringContainsString('<break time="800ms"></break>', $content);
+        $this->assertEquals($transformer->content, Storage::disk('public_uploads')->get('file.ssml'));
     }
 
-    protected function valid_html()
+    /**
+     * Valid HTML
+     *
+     * @return string
+     */
+    private function valid_html()
     {
-        return '<h2>Meerkat</h2>  <br><figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-01.jpg"          alt="Meerkat" width="650"></figure>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-02.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkat’s live in dry deserts or grasslands. They live in groups with other meerkats.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-03.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkat’s take turns standing guard. They watch for bigger animals. This helps keep the group safe.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-04.jpg"          alt="Meerkats" width="650"></figure>  <p>Then other meerkats in the group can eat, rest, or play.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-05.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats eat insects and other small animals. They also eat plants. This meerkat is eating a grasshopper.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-06.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats get water wherever they can find it. This meerkat is drinking from a tiny puddle.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-07.jpg"          alt="Meerkats" width="650"></figure>  <p>Meerkats make their homes by digging into the ground.</p>  <p>Their underground homes are called burrows.</p>  <p>Burrows give them shade and a safe place to sleep.</p>  <figure><img          src="https://s3.amazonaws.com/s3-static.iwqst.com/assets/media/al-prime/plants-and-animals/readings/meerkat/AnimalStories_Meerkat_lores-08.jpg"          alt="Meerkats" width="650"></figure> <table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table> <p>Meerkats find everything they need in the places where they live.</p><strong>Strong tag content</strong><em>Em tag content</em><ul><li>some list text</li></ul>- —';
+        return '<h2>Title</h2><p>Lore’m ipsum dolo’r <br /> sit amet, “consectetuer” adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table><p><strong>Some strong text</strong></p><p><em>Some Emphasis text</em></p><ul><li>some list text</li></ul>- —';
+    }
+
+    /**
+     * Valid HTML
+     *
+     * @return string
+     */
+    private function valid_ssml()
+    {
+        return '<speak><p>Title</p><break time="1200ms"></break><p>Lore&apos;m ipsum dolo&apos;r  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break><p>fejiafjeaw</p><break time="800ms"></break><p>feaf</p><break time="800ms"></break><p>Some strong text</p><break time="800ms"><p>Some Emphasis text</p><break time="800ms"><p>some list text</p><break time="800ms"></break><p>Some strong text</p><p>Some Emphasis text</p>&ndash; &mdash;</speak>';
     }
 
     public function tearDown(): void

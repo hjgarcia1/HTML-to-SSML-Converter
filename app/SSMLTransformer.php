@@ -125,13 +125,12 @@ class SSMLTransformer
     /**
      * Replace headers
      *
-     * @param $tag
      * @return $this
      */
-    public function replaceHeaders($tag)
+    public function replaceHeaders()
     {
-        $this->content = preg_replace('/h[\d]{1}/', $tag, (string)$this->content);
-        $this->content = preg_replace('/<\/p><p>/', '</p><break time="1200ms"></break><p>', (string)$this->content);
+        $this->content = preg_replace('/<h[\d]{1}>/', '<p>', (string)$this->content);
+        $this->content = preg_replace('/<\/h[\d]{1}>/', '</p><break time="1200ms"></break>', (string)$this->content);
 
         return $this;
     }
@@ -168,8 +167,16 @@ class SSMLTransformer
 
     public function replaceDashes()
     {
-        $this->content = preg_replace('/-/', '&ndash;', (string)$this->content);
-        $this->content = preg_replace('/—/', '&mdash;', (string)$this->content);
+        $this->content = preg_replace('/-/', ' ', (string)$this->content);
+        $this->content = preg_replace('/—/', ' ', (string)$this->content);
+
+        return $this;
+    }
+
+    public function replaceQuotes()
+    {
+        $this->content = preg_replace('/“/', '', (string)$this->content);
+        $this->content = preg_replace('/”/', '', (string)$this->content);
 
         return $this;
     }
