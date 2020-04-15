@@ -3,14 +3,14 @@
 namespace Tests\Feature;
 
 use App\Ssml;
-use App\SSMLTransformer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Storage;
 use Tests\TestCase;
+use Tests\Traits\ContentTrait;
 
 class SsmlFeatureTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, ContentTrait;
 
     public function tearDown(): void
     {
@@ -68,23 +68,6 @@ class SsmlFeatureTest extends TestCase
         ]);
     }
 
-    public function test_we_can_delete_an_ssml()
-    {
-        \File::copy(base_path('tests/fixtures/reading.mp3'), public_path('readings/reading.mp3'));
-
-        $filename = Ssml::getFilename('ssml file');
-        $transformer = $this->generateSsmlFile($filename);
-        $ssml = $this->createSsml($filename, $transformer);
-
-        $response = $this->delete('/ssml/' . $ssml->id);
-
-        $response->assertRedirect('/');
-        $response->assertSessionHas('message', 'SSML file was deleted!');
-        $this->assertDatabaseMissing('ssmls', [ 'id' => $ssml->id]);
-        $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
-        $this->assertFileNotExists(\public_path('readings/reading.mp3'));
-    }
-
     public function test_we_can_edit_an_ssml()
     {
         $filename = Ssml::getFilename('ssml file');
@@ -134,79 +117,21 @@ class SsmlFeatureTest extends TestCase
         ]);
     }
 
-    /**
-     * Valid HTML
-     *
-     * @return string
-     */
-    private function valid_html()
+    public function test_we_can_delete_an_ssml()
     {
-        return '<h2>Title</h2><p>Lore’m ipsum dolo’r <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table><p><strong>Some strong text</strong></p><p><em>Some Emphasis text</em></p><ul><li>some list text</li></ul>- —';
-    }
+        \File::copy(base_path('tests/fixtures/reading.mp3'), public_path('readings/reading.mp3'));
 
-    /**
-     * Valid HTML
-     *
-     * @return string
-     */
-    private function valid_ssml()
-    {
-        return '<speak><p>Title</p><break time="1200ms"></break><p>Lore&apos;m ipsum dolo&apos;r  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break><p>fejiafjeaw</p><break time="800ms"></break><p>feaf</p><break time="800ms"></break><p>Some strong text</p><break time="800ms"><p>Some Emphasis text</p><break time="800ms"><p>some list text</p><break time="800ms"></break><p>Some strong text</p><p>Some Emphasis text</p>&ndash; &mdash;</speak>';
-    }
+        $filename = Ssml::getFilename('ssml file');
+        $transformer = $this->generateSsmlFile($filename);
+        $ssml = $this->createSsml($filename, $transformer);
 
-    /**
-     * Valid HTML
-     *
-     * @return string
-     */
-    private function new_html()
-    {
-        return '<h2>New Title</h2><p>Lore’m ipsum dolo’r <br /> sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus <br/> mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><img src="somefile.img" /><dl><dd>fejiafjeaw</dd><dt>feaf</dt></dl><figure></figure><table><thead><tr></tr></thead><tbody><tr><td></td></tr></tbody></table><p><strong>Some strong text</strong></p><p><em>Some Emphasis text</em></p><ul><li>some list text</li></ul>- —';
-    }
+        $response = $this->delete('/ssml/' . $ssml->id);
 
-    /**
-     * @param string $filename
-     * @return SSMLTransformer
-     */
-    protected function generateSsmlFile(string $filename)
-    {
-        $transformer = new SSMLTransformer($this->valid_html());
-
-        $transformer->removeTag('br')
-            ->removeTag('figure')
-            ->removeTag('img')
-            ->removeTag('strong')
-            ->removeTag('em')
-            ->removeTag('table')
-            ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
-            ->wrapAll('speak');
-
-        $transformer->replaceApostrophes();
-        $transformer->replaceDashes();
-        $transformer->replaceLists();
-        $transformer->replaceGlossary();
-        $transformer->replaceHeaders('p');
-
-        $transformer->save($filename);
-
-        return $transformer;
-    }
-
-    /**
-     * @param string $filename
-     * @param SSMLTransformer $transformer
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
-     */
-    protected function createSsml(string $filename, SSMLTransformer $transformer)
-    {
-        return factory(Ssml::class)->create([
-            'title' => 'SSML',
-            'link' => Ssml::getFilePath($filename),
-            'mp3' => url('readings/reading.mp3'),
-            'html' => $this->valid_html(),
-            'content' => $transformer->content,
-        ]);
+        $response->assertRedirect('/');
+        $response->assertSessionHas('message', 'SSML file was deleted!');
+        $this->assertDatabaseMissing('ssmls', [ 'id' => $ssml->id]);
+        $this->assertFileNotExists(\public_path('storage/ssml-file.ssml'));
+        $this->assertFileNotExists(\public_path('readings/reading.mp3'));
     }
 
 }
