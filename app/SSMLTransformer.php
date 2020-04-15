@@ -160,7 +160,7 @@ class SSMLTransformer
      */
     public function replaceApostrophes()
     {
-        $this->content = preg_replace('/’/', '&apos;', (string)$this->content);
+        $this->content = preg_replace('/’/', '\'', (string)$this->content);
 
         return $this;
     }

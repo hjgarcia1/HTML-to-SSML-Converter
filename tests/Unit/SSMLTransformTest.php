@@ -31,7 +31,7 @@ class SSMLTransformTest extends TestCase
 
         $transformer->replaceApostrophes();
 
-        $this->assertStringContainsString('&apos;', $transformer->content);
+        $this->assertStringContainsString('\'', $transformer->content);
     }
 
     public function test_it_can_replace_quotes()

@@ -23,7 +23,7 @@ trait ContentTrait
      */
     function valid_ssml()
     {
-        return '<speak><p>Title</p><break time="1200ms"></break><p>Lore&apos;m ipsum dolo&apos;r  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean<break time="500ms"></break>massa. Cum<break time="500ms"></break>sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break><p>fejiafjeaw</p><break time="800ms"></break><p>feaf</p><break time="800ms"></break><p>Some strong text</p><break time="800ms"></break><p>Some Emphasis text</p><break time="800ms"></break><p>some list text</p><break time="800ms"></break></speak>';
+        return '<speak><p>Title</p><break time="1200ms"></break><p>Lore\'m ipsum dolo\'r  sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean<break time="500ms"></break>massa. Cum<break time="500ms"></break>sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus  mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p><break time="800ms"></break><p>fejiafjeaw</p><break time="800ms"></break><p>feaf</p><break time="800ms"></break><p>Some strong text</p><break time="800ms"></break><p>Some Emphasis text</p><break time="800ms"></break><p>some list text</p><break time="800ms"></break></speak>';
     }
 
     /**
