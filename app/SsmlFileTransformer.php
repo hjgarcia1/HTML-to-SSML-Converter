@@ -72,7 +72,6 @@ class SsmlFileTransformer
     /**
      * Replace strong
      *
-     * @param $tag
      * @return $this
      */
     public function replaceStrong()
@@ -85,7 +84,6 @@ class SsmlFileTransformer
     /**
      * Replace emphasis
      *
-     * @param $tag
      * @return $this
      */
     public function replaceEmphasis()
@@ -98,7 +96,6 @@ class SsmlFileTransformer
     /**
      * Replace lists
      *
-     * @param $tag
      * @return $this
      */
     public function replaceLists()
@@ -127,7 +124,6 @@ class SsmlFileTransformer
     /**
      * Replace headers
      *
-     * @param $tag
      * @return $this
      */
     public function replaceGlossary()
@@ -145,7 +141,9 @@ class SsmlFileTransformer
     }
 
     /**
-     * Remove ap
+     * Replace apostrophes
+     *
+     * @return $this
      */
     public function replaceApostrophes()
     {
@@ -154,6 +152,11 @@ class SsmlFileTransformer
         return $this;
     }
 
+    /**
+     * Replace dashes
+     *
+     * @return $this
+     */
     public function replaceDashes()
     {
         $this->content = preg_replace('/-/', '<break time="500ms"></break>', (string)$this->content);
@@ -162,6 +165,11 @@ class SsmlFileTransformer
         return $this;
     }
 
+    /**
+     * Replace quotes
+     *
+     * @return $this
+     */
     public function replaceQuotes()
     {
         $this->content = preg_replace('/“/', '', (string)$this->content);
@@ -170,6 +178,12 @@ class SsmlFileTransformer
         return $this;
     }
 
+    /**
+     * Create SSML File
+     *
+     * @param $filename
+     * @return $this
+     */
     public function create($filename)
     {
         $this
@@ -220,6 +234,7 @@ class SsmlFileTransformer
     }
 
     /**
+     * Sanitize SSML Content
      *
      * @param \FluentDOM\Query $html
      */
