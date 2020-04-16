@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Support\Facades\Storage;
 
-class SSMLTransformer
+class SSMLFileTransformer
 {
     /**
      * @var string
@@ -177,6 +177,32 @@ class SSMLTransformer
     {
         $this->content = preg_replace('/“/', '', (string)$this->content);
         $this->content = preg_replace('/”/', '', (string)$this->content);
+
+        return $this;
+    }
+
+    public function create($filename)
+    {
+        $this
+            ->removeTag('br')
+            ->removeTag('table')
+            ->removeTag('img')
+            ->removeTag('figure')
+            ->appendTo('<break />', 'p')
+            ->appendAttr('break', ['time' => '800ms'])
+            ->wrapAll('speak');
+
+        $this
+            ->replaceHeaders()
+            ->replaceEmphasis()
+            ->replaceStrong()
+            ->replaceLists()
+            ->replaceGlossary()
+            ->replaceApostrophes()
+            ->replaceQuotes()
+            ->replaceDashes();
+
+        $this->save($filename);
 
         return $this;
     }

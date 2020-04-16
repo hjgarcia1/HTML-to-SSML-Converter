@@ -45,33 +45,10 @@ class Ssml extends \Eloquent
      *
      * @param $html
      * @param string $filename
-     * @return SSMLTransformer
+     * @return SSMLFileTransformer
      */
-    public static function generate($html, string $filename): SSMLTransformer
+    public static function generate($html, string $filename): SSMLFileTransformer
     {
-        $ssml = new SSMLTransformer($html);
-
-        $ssml
-            ->removeTag('br')
-            ->removeTag('table')
-            ->removeTag('img')
-            ->removeTag('figure')
-            ->appendTo('<break />', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
-            ->wrapAll('speak');
-
-        $ssml
-            ->replaceHeaders()
-            ->replaceEmphasis()
-            ->replaceStrong()
-            ->replaceLists()
-            ->replaceGlossary()
-            ->replaceApostrophes()
-            ->replaceQuotes()
-            ->replaceDashes();
-
-        $ssml->save($filename);
-
-        return $ssml;
+        return (new SSMLFileTransformer($html))->create($filename);
     }
 }

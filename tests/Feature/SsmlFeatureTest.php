@@ -48,7 +48,7 @@ class SsmlFeatureTest extends TestCase
 
     public function test_we_can_save_an_ssml()
     {
-        $response = $this->post('/store', [
+        $response = $this->withoutExceptionHandling()->post('/store', [
             'title' => 'Some Name',
             'html' => $this->valid_html(),
         ]);
