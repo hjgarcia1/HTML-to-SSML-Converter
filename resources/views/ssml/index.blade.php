@@ -20,7 +20,6 @@
         <tr>
             <th>ID</th>
             <th>Title</th>
-            <th>Link</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -29,10 +28,11 @@
             <tr>
                 <td>{{ $ssml->id }}</td>
                 <td>{{ $ssml->title }}</td>
-                <td><a href="{{ $ssml->link }}" target="_blank">{{ $ssml->link }}</a></td>
                 <td style="width: 20%">
                     <a href="/ssml/{{$ssml->id}}" class="btn btn-secondary btn-sm btn-flat"> <i
                             class="fa fa-pencil"></i> </a>
+
+                    <a href="{{ $ssml->link }}" class="btn btn-secondary btn-sm btn-flat" target="_blank"><i class="fa fa-file-code-o"></i></a>
 
                     <a href="{{ $ssml->mp3 }}" class="btn btn-secondary btn-sm btn-flat" download target="_blank"> <i
                             class="fa fa-file-audio-o"></i> </a> <a class="btn btn-danger btn-sm btn-flat" href="#"
