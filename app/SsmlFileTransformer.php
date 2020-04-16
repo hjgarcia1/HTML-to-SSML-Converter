@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Class SsmlFileTransformer
+ * @package App
+ */
 class SsmlFileTransformer
 {
     /**
@@ -28,12 +32,7 @@ class SsmlFileTransformer
             ->find('//' . $where)
             ->after($tag);
 
-        $this->content = preg_replace('/^.+\n/', '', (string)$html);
-        $this->content = preg_replace('/<html>/', '', $this->content);
-        $this->content = preg_replace('/<body>/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/html\>/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/body\>/', '', (string)$this->content);
-        $this->content = preg_replace('/\\n/', '', (string)$this->content);
+        $this->sanitizeSsmlContent($html);
 
         return $this;
 
@@ -48,12 +47,7 @@ class SsmlFileTransformer
         $html->find('//' . $tag)
             ->attr[$firstKey] = $attr[$firstKey];
 
-        $this->content = preg_replace('/^.+\n/', '', (string)$html);
-        $this->content = preg_replace('/<html>/', '', $this->content);
-        $this->content = preg_replace('/<body>/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/html\>/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/body\>/', '', (string)$this->content);
-        $this->content = preg_replace('/\\n/', '', (string)$this->content);
+        $this->sanitizeSsmlContent($html);
 
         return $this;
     }
@@ -70,12 +64,7 @@ class SsmlFileTransformer
             ->find('//' . $tag)
             ->remove();
 
-        $this->content = preg_replace('/^.+\n/', '', (string)$html);
-        $this->content = preg_replace('/<html>/', '', (string)$this->content);
-        $this->content = preg_replace('/<body>/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/html\>/', '', (string)$this->content);
-        $this->content = preg_replace('/\<\/body\>/', '', (string)$this->content);
-        $this->content = preg_replace('/\\n/', '', (string)$this->content);
+        $this->sanitizeSsmlContent($html);
 
         return $this;
     }
@@ -228,5 +217,20 @@ class SsmlFileTransformer
     public function save($filename)
     {
         Storage::disk('public_uploads')->put($filename, $this->content);
+    }
+
+    /**
+     *
+     * @param \FluentDOM\Query $html
+     */
+    protected function sanitizeSsmlContent(\FluentDOM\Query $html): void
+    {
+        $this->content = preg_replace('/^.+\r/', '', (string)$html);
+        $this->content = preg_replace('/^.+\n/', '', (string)$html);
+        $this->content = preg_replace('/<html>/', '', $this->content);
+        $this->content = preg_replace('/<body>/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/html\>/', '', (string)$this->content);
+        $this->content = preg_replace('/\<\/body\>/', '', (string)$this->content);
+        $this->content = preg_replace('/\\n/', '', (string)$this->content);
     }
 }
