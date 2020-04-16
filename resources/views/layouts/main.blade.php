@@ -17,7 +17,7 @@
         @include('partials.alerts')
         @yield('content')
     </div>
-    <footer>
+    <footer class="mt-4">
         <div class="border-1 border-top container pt-2">
             <p class="text-center text-muted">&copy; Copyright {{ date('Y') }}. All Rights Reserved.</p>
         </div>
