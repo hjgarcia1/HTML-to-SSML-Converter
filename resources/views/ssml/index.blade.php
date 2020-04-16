@@ -1,21 +1,6 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.main')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SSML Converter App</title>
-
-    @include('partials.styles')
-
-</head>
-
-<body>
-
-@include('partials.navbar')
-
-<div class="container mt-3">
-    @include('partials.alerts')
+@section('content')
     <div class="d-flex">
         <h1>SSML List</h1>
         <form class="form-inline d-flex mb-3 ml-auto" method="get" action="/">
@@ -50,8 +35,7 @@
                             class="fa fa-pencil"></i> </a>
 
                     <a href="{{ $ssml->mp3 }}" class="btn btn-secondary btn-sm btn-flat" download target="_blank"> <i
-                            class="fa fa-file-audio-o"></i> </a>
-                    <a class="btn btn-danger btn-sm btn-flat" href="#"
+                            class="fa fa-file-audio-o"></i> </a> <a class="btn btn-danger btn-sm btn-flat" href="#"
                         onclick="event.preventDefault(); document.getElementById('delete-form-{{ $ssml->id }}').submit();">
                         <i class="fa fa-times"></i> </a>
 
@@ -72,13 +56,4 @@
         </tbody>
     </table>
     {{ $ssmls->links() }}
-</div>
-<footer>
-    <div class="border-1 border-top container pt-2">
-        <p class="text-center text-muted">&copy; Copyright {{ date('Y') }}. All Rights Reserved.</p>
-    </div>
-</footer>
-@include('partials.scripts')
-</body>
-
-</html>
+@stop
