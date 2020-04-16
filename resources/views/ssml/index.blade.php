@@ -16,7 +16,6 @@
 
 <div class="container mt-3">
     @include('partials.alerts')
-
     <div class="d-flex">
         <h1>SSML List</h1>
         <form class="form-inline d-flex mb-3 ml-auto" method="get" action="/">
@@ -31,8 +30,6 @@
             @endif
         </form>
     </div>
-
-
     <table class="table">
         <thead>
         <tr>
@@ -76,7 +73,11 @@
     </table>
     {{ $ssmls->links() }}
 </div>
-
+<footer>
+    <div class="border-1 border-top container pt-2">
+        <p class="text-center text-muted">&copy; Copyright {{ date('Y') }}. All Rights Reserved.</p>
+    </div>
+</footer>
 @include('partials.scripts')
 </body>
 
