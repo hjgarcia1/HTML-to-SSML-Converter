@@ -45,10 +45,10 @@ class Ssml extends \Eloquent
      *
      * @param $html
      * @param string $filename
-     * @return SSMLFileTransformer
+     * @return SsmlFileTransformer
      */
-    public static function generate($html, string $filename): SSMLFileTransformer
+    public static function generate($html, string $filename): SsmlFileTransformer
     {
-        return (new SSMLFileTransformer($html))->create($filename);
+        return (new SsmlFileTransformer($html))->create($filename);
     }
 }

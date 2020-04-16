@@ -2,7 +2,7 @@
 namespace Tests\Traits;
 
 use App\Ssml;
-use App\SSMLFileTransformer;
+use App\SsmlFileTransformer;
 
 trait ContentTrait
 {
@@ -38,11 +38,11 @@ trait ContentTrait
 
     /**
      * @param string $filename
-     * @return SSMLFileTransformer
+     * @return SsmlFileTransformer
      */
     function generateSsmlFile(string $filename)
     {
-        $transformer = new SSMLFileTransformer($this->valid_html());
+        $transformer = new SsmlFileTransformer($this->valid_html());
 
         $transformer->removeTag('br')
             ->removeTag('figure')
@@ -67,10 +67,10 @@ trait ContentTrait
 
     /**
      * @param string $filename
-     * @param SSMLFileTransformer $transformer
+     * @param SsmlFileTransformer $transformer
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
      */
-    function createSsml(string $filename, SSMLFileTransformer $transformer)
+    function createSsml(string $filename, SsmlFileTransformer $transformer)
     {
         return factory(Ssml::class)->create([
             'title' => 'SSML',

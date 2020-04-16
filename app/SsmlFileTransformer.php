@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Support\Facades\Storage;
 
-class SSMLFileTransformer
+class SsmlFileTransformer
 {
     /**
      * @var string
