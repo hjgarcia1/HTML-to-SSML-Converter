@@ -1,1 +1,26 @@
-//
+//Import sheets
+@import '~bootstrap/scss/bootstrap';
+@import '~font-awesome/scss/font-awesome';
+
+
+//General Styles
+ html, body {
+        height: 100%;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6, .nav-link {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .grid {
+        height: 100%;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+    }
+
+    .invalid-feedback {
+        display: block;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
