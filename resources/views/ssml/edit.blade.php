@@ -22,8 +22,11 @@
                         class="form-control">{{ old('html', $ssml->html) }}</textarea>
                 </div>
                 {!! $errors->first('html','<div class="invalid-feedback">:message</div>') !!}
-                <button type="submit" class="btn btn-primary">Update</button>
-                <a href="/" type="submit" class="btn btn-secondary">Back to List</a>
+
+                <div class="d-lg-flex justify-content-end p-3 bg-light">
+                    <button type="submit" class="btn btn-primary mr-lg-2 d-inline-block">Update</button>
+                    <a href="/" type="submit" class="btn btn-secondary">Back to List</a>
+                </div>
             </form>
         </div>
     </div>
