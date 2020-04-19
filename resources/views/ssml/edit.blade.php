@@ -18,6 +18,11 @@
                 </div>
 
                 <div class="form-group">
+                    <p><strong>Current MP3:</strong></p>
+                    <p><a href="{{ $ssml->mp3 }}" target="_blank" download="">{{ $ssml->mp3 }}</a></p>
+                </div>
+
+                <div class="form-group">
                     <label for="html">HTML</label> <textarea name="html" id="html" cols="30" rows="10"
                         class="form-control">{{ old('html', $ssml->html) }}</textarea>
                 </div>
