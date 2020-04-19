@@ -15,45 +15,49 @@
             @endif
         </form>
     </div>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @forelse($ssmls as $ssml)
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
             <tr>
-                <td>{{ $ssml->id }}</td>
-                <td>{{ $ssml->title }}</td>
-                <td style="width: 20%">
-                    <a href="/ssml/{{$ssml->id}}" class="btn btn-secondary btn-sm btn-flat"> <i
-                            class="fa fa-pencil"></i> </a>
-
-                    <a href="{{ $ssml->link }}" class="btn btn-secondary btn-sm btn-flat" target="_blank"><i class="fa fa-file-code-o"></i></a>
-
-                    <a href="{{ $ssml->mp3 }}" class="btn btn-secondary btn-sm btn-flat" download target="_blank"> <i
-                            class="fa fa-file-audio-o"></i> </a> <a class="btn btn-danger btn-sm btn-flat" href="#"
-                        onclick="event.preventDefault(); document.getElementById('delete-form-{{ $ssml->id }}').submit();">
-                        <i class="fa fa-times"></i> </a>
-
-                    <form action="{{ url('/ssml/' . $ssml->id) }}" method="POST" id="delete-form-{{ $ssml->id }}"
-                        style="display: none;">
-                        {{csrf_field()}}
-                        {{ method_field('DELETE') }}
-                        <input type="hidden" value="{{ $ssml->id }}" name="id">
-                    </form>
-                </td>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Actions</th>
             </tr>
+            </thead>
+            <tbody>
+            @forelse($ssmls as $ssml)
+                <tr>
+                    <td>{{ $ssml->id }}</td>
+                    <td>{{ $ssml->title }}</td>
+                    <td style="width: 20%">
+                        <a href="/ssml/{{$ssml->id}}" class="btn btn-primary btn-sm mb-2 btn-flat"> <i
+                                class="fa fa-pencil"></i> </a>
 
-        @empty
-            <tr>
-                <td colspan="4" class="text-center">No Records</td>
-            </tr>
-        @endforelse
-        </tbody>
-    </table>
+                        <a href="{{ $ssml->link }}" class="btn btn-secondary btn-sm mb-2 btn-flat" target="_blank"><i class="fa fa-file-code-o"></i></a>
+
+                        <a href="{{ $ssml->mp3 }}" class="btn btn-secondary btn-sm mb-2 btn-flat" download target="_blank"> <i
+                                class="fa fa-file-audio-o"></i> </a>
+
+                        <a class="btn btn-danger btn-sm mb-2 btn-flat" href="#"
+                            onclick="event.preventDefault(); document.getElementById('delete-form-{{ $ssml->id }}').submit();">
+                            <i class="fa fa-times"></i> </a>
+
+                        <form action="{{ url('/ssml/' . $ssml->id) }}" method="POST" id="delete-form-{{ $ssml->id }}"
+                            style="display: none;">
+                            {{csrf_field()}}
+                            {{ method_field('DELETE') }}
+                            <input type="hidden" value="{{ $ssml->id }}" name="id">
+                        </form>
+                    </td>
+                </tr>
+
+            @empty
+                <tr>
+                    <td colspan="4" class="text-center">No Records</td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
     {{ $ssmls->links() }}
 @stop
