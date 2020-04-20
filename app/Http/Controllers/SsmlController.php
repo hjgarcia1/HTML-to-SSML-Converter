@@ -50,9 +50,9 @@ class SsmlController extends Controller
 
         $ssml = Ssml::generate($request->get('html'), $filename);
 
-        if ($ssml) {
-            exec("java -jar " . app_path('Converter/google-tts.jar') . " " . public_path('storage/' . $filename) . " " . public_path('readings/' . $filename . '.mp3') . " 0.87");
-        }
+//        if ($ssml) {
+//            exec("java -jar " . app_path('Converter/google-tts.jar') . " " . public_path('storage/' . $filename) . " " . public_path('readings/' . $filename . '.mp3') . " 0.87");
+//        }
 
         Ssml::create([
             'title' => $request->get('title'),
