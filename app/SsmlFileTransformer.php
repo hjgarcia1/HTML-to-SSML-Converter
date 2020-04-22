@@ -165,6 +165,13 @@ class SsmlFileTransformer
         return $this;
     }
 
+    public function replaceFractions()
+    {
+        $this->content = preg_replace('/(½)/', '<say-as interpret-as="fraction">$1</say-as>', (string)$this->content);
+
+        return $this;
+    }
+
     /**
      * Replace quotes
      *
@@ -203,7 +210,8 @@ class SsmlFileTransformer
             ->replaceGlossary()
             ->replaceApostrophes()
             ->replaceQuotes()
-            ->replaceDashes();
+            ->replaceDashes()
+            ->replaceFractions();
 
         $this->save($filename);
 

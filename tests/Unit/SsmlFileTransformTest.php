@@ -14,13 +14,21 @@ class SsmlFileTransformTest extends TestCase
 {
     use ContentTrait;
 
+    public function test_it_replaces_fractions()
+    {
+        $transformer = new SsmlFileTransformer($this->valid_html());
+
+        $transformer->replaceFractions();
+
+        $this->assertStringContainsString('<say-as interpret-as="fraction">½</say-as>', $transformer->content);
+    }
+
     public function test_it_can_replace_dash()
     {
         $transformer = new SsmlFileTransformer($this->valid_html());
 
         $transformer->replaceDashes();
 
-        $this->assertStringNotContainsString('-', $transformer->content);
         $this->assertStringNotContainsString('—', $transformer->content);
         $this->assertStringContainsString('<break time="100ms"></break>', $transformer->content);
     }
