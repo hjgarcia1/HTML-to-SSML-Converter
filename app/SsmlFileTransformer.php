@@ -167,7 +167,9 @@ class SsmlFileTransformer
 
     public function replaceFractions()
     {
-        $this->content = preg_replace('/(½)/', '<say-as interpret-as="fraction">$1</say-as>', (string)$this->content);
+        $this->content = preg_replace('/(\d+)(½)/', '<say-as interpret-as="fraction">$1+1/2</say-as>', (string)$this->content);
+        $this->content = preg_replace('/(\d+)&half;/', '<say-as interpret-as="fraction">$1+1/2</say-as>', (string)$this->content);
+        $this->content = preg_replace('/(\d+)&amp;half;/', '<say-as interpret-as="fraction">$1+1/2</say-as>', (string)$this->content);
 
         return $this;
     }

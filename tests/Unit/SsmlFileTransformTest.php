@@ -20,7 +20,8 @@ class SsmlFileTransformTest extends TestCase
 
         $transformer->replaceFractions();
 
-        $this->assertStringContainsString('<say-as interpret-as="fraction">½</say-as>', $transformer->content);
+        $this->assertStringContainsString('<say-as interpret-as="fraction">5+1/2</say-as>', $transformer->content);
+        $this->assertStringContainsString('<say-as interpret-as="fraction">2+1/2</say-as>', $transformer->content);
     }
 
     public function test_it_can_replace_dash()
