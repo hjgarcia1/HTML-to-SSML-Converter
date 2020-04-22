@@ -22,7 +22,7 @@ class SsmlFileTransformTest extends TestCase
 
         $this->assertStringNotContainsString('-', $transformer->content);
         $this->assertStringNotContainsString('—', $transformer->content);
-        $this->assertStringContainsString('<break time="500ms"></break>', $transformer->content);
+        $this->assertStringContainsString('<break time="250ms"></break>', $transformer->content);
     }
 
     public function test_it_can_replace_apostrophes()
