@@ -26,6 +26,7 @@
                     <label for="html">HTML</label> <textarea name="html" id="html" cols="30" rows="10"
                         class="form-control">{{ old('html', $ssml->html) }}</textarea>
                 </div>
+                <p id="characterCount" class="text-danger"></p>
                 {!! $errors->first('html','<div class="invalid-feedback">:message</div>') !!}
 
                 <div class="d-lg-flex justify-content-end p-3 bg-light">

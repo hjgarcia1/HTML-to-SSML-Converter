@@ -9,8 +9,8 @@
                 {{ csrf_field() }}
 
                 <div class="form-group">
-                    <label for="title">Name</label> <input type="text" id="title" name="title" value="{{ old('title') }}"
-                        class="form-control">
+                    <label for="title">Name</label> <input type="text" id="title" name="title"
+                        value="{{ old('title') }}" class="form-control">
                     {!! $errors->first('title','<div class="invalid-feedback">:message</div>') !!}
                 </div>
 
@@ -18,6 +18,7 @@
                     <label for="html">HTML</label> <textarea name="html" id="html" cols="30" rows="10"
                         class="form-control">{{ old('html') }}</textarea>
                 </div>
+                <p id="characterCount" class="text-danger"></p>
                 {!! $errors->first('html','<div class="invalid-feedback">:message</div>') !!}
 
                 <div class="d-lg-flex justify-content-end p-3 bg-light">
@@ -27,7 +28,9 @@
             </form>
         </div>
     </div>
+@stop
 
+@section('scripts')
 
 @stop
 
