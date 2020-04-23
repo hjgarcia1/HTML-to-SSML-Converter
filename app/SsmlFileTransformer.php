@@ -212,26 +212,9 @@ class SsmlFileTransformer
      */
     public function create($filename)
     {
-        $this
-            ->removeTag('br')
-            ->removeTag('table')
-            ->removeTag('img')
-            ->removeTag('figure')
-            ->appendTo('<break />', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
-            ->wrapAll('speak');
+        $this->replaceTags();
 
-        $this
-            ->replaceHeaders()
-            ->replaceEmphasis()
-            ->replaceStrong()
-            ->replaceLists()
-            ->replaceGlossary()
-            ->replaceApostrophes()
-            ->replaceQuotes()
-            ->replaceColons()
-            ->replaceDashes()
-            ->replaceFractions();
+        $this->replaceCharacters();
 
         $this->save($filename);
 
@@ -275,5 +258,38 @@ class SsmlFileTransformer
         $this->content = preg_replace('/\<\/html\>/', '', (string)$this->content);
         $this->content = preg_replace('/\<\/body\>/', '', (string)$this->content);
         $this->content = preg_replace('/\\n/', '', (string)$this->content);
+    }
+
+    /**
+     * Replace Characters
+     */
+    protected function replaceCharacters(): void
+    {
+        $this
+            ->replaceHeaders()
+            ->replaceEmphasis()
+            ->replaceStrong()
+            ->replaceLists()
+            ->replaceGlossary()
+            ->replaceApostrophes()
+            ->replaceQuotes()
+            ->replaceColons()
+            ->replaceDashes()
+            ->replaceFractions();
+    }
+
+    /**
+     * Replace/Transform tags
+     */
+    protected function replaceTags(): void
+    {
+        $this
+            ->removeTag('br')
+            ->removeTag('table')
+            ->removeTag('img')
+            ->removeTag('figure')
+            ->appendTo('<break />', 'p')
+            ->appendAttr('break', ['time' => '800ms'])
+            ->wrapAll('speak');
     }
 }
