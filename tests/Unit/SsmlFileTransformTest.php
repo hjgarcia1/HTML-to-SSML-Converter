@@ -14,6 +14,17 @@ class SsmlFileTransformTest extends TestCase
 {
     use ContentTrait;
 
+    public function test_it_replaces_colons()
+    {
+        $transformer = new SsmlFileTransformer($this->valid_html());
+
+        $transformer->replaceColons();
+
+        $this->assertStringNotContainsString(':', $transformer->content);
+        $this->assertStringContainsString('<break time="100ms"></break>', $transformer->content);
+    }
+
+
     public function test_it_replaces_fractions()
     {
         $transformer = new SsmlFileTransformer($this->valid_html());

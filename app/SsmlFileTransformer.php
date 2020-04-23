@@ -165,11 +165,28 @@ class SsmlFileTransformer
         return $this;
     }
 
+    /**
+     * Replace fractions
+     *
+     * @return $this
+     */
     public function replaceFractions()
     {
         $this->content = preg_replace('/(\d+)(½)/', '<say-as interpret-as="fraction">$1+1/2</say-as>', (string)$this->content);
         $this->content = preg_replace('/(\d+)&half;/', '<say-as interpret-as="fraction">$1+1/2</say-as>', (string)$this->content);
         $this->content = preg_replace('/(\d+)&amp;half;/', '<say-as interpret-as="fraction">$1+1/2</say-as>', (string)$this->content);
+
+        return $this;
+    }
+
+    /**
+     * Replace quotes
+     *
+     * @return $this
+     */
+    public function replaceColons()
+    {
+        $this->content = preg_replace('/:/', '<break time="100ms"></break>', (string)$this->content);
 
         return $this;
     }
@@ -212,6 +229,7 @@ class SsmlFileTransformer
             ->replaceGlossary()
             ->replaceApostrophes()
             ->replaceQuotes()
+            ->replaceColons()
             ->replaceDashes()
             ->replaceFractions();
 
