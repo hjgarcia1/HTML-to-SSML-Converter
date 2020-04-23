@@ -26,28 +26,28 @@ class SsmlFileTransformer
         $this->dom = \FluentDOM($this->content, 'text/html');
     }
 
-    public function appendTo($tag, $where)
+    /**
+     * Add SSML Break Tags
+     *
+     * @param $tag
+     * @return $this
+     */
+    public function addBreakTags($tag)
     {
-        $html = $this->dom
-            ->find('//' . $where)
-            ->after($tag);
-
-        $this->sanitizeSsmlContent($html);
+        $this->content = preg_replace("/(<\/$tag>)/", '$1<break></break>', (string)$this->content);
 
         return $this;
-
     }
 
-    public function appendAttr($tag, $attr)
+    /**
+     * Add Time Attribute to SSML Break Tags
+     *
+     * @param $value
+     * @return $this
+     */
+    public function addBreakTagTimeAttr($value)
     {
-        $firstKey = array_key_first($attr);
-
-        $html = $this->dom;
-
-        $html->find('//' . $tag)
-            ->attr[$firstKey] = $attr[$firstKey];
-
-        $this->sanitizeSsmlContent($html);
+        $this->content = preg_replace('/<break><\/break>/', '<break time="' . $value . '"></break>', (string)$this->content);
 
         return $this;
     }
@@ -229,7 +229,7 @@ class SsmlFileTransformer
      */
     public function wrapAll($tag)
     {
-        $this->content  = "<$tag>" . $this->content . "</$tag>";
+        $this->content = "<$tag>" . $this->content . "</$tag>";
 
         return $this;
     }
@@ -288,8 +288,8 @@ class SsmlFileTransformer
             ->removeTag('table')
             ->removeTag('img')
             ->removeTag('figure')
-            ->appendTo('<break />', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
+            ->addBreakTags('p')
+            ->addBreakTagTimeAttr('800ms')
             ->wrapAll('speak');
     }
 }

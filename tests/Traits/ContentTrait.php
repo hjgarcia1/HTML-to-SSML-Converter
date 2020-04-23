@@ -50,8 +50,8 @@ trait ContentTrait
             ->removeTag('strong')
             ->removeTag('em')
             ->removeTag('table')
-            ->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
+            ->addBreakTags('p')
+            ->addBreakTagTimeAttr('800ms')
             ->wrapAll('speak');
 
         $transformer->replaceApostrophes();

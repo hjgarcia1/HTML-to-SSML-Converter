@@ -5,12 +5,11 @@ namespace Tests\Unit;
 
 use App\SsmlFileTransformer;
 use Storage;
-use Str;
 use Tests\TestCase;
 use Tests\Traits\ContentTrait;
 use function public_path;
 
-class SsmlFileTransformTest extends TestCase
+class SsmlTransformerTest extends TestCase
 {
     use ContentTrait;
 
@@ -133,11 +132,11 @@ class SsmlFileTransformTest extends TestCase
         $this->assertEquals(0, substr_count($transformer->content, '<img src="#" alt="#"/>'));
     }
 
-    public function test_we_can_append_an_html_tag()
+    public function test_we_can_add_ssml_break_tags()
     {
         $transformer = new SsmlFileTransformer($this->valid_html());
 
-        $transformer->appendTo('<break/>', 'p');
+        $transformer->addBreakTags('p');
 
         $this->assertStringContainsString('<break></break>', $transformer->content);
     }
@@ -183,34 +182,13 @@ class SsmlFileTransformTest extends TestCase
     {
         $transformer = new SsmlFileTransformer($this->valid_html());
 
-        $transformer->appendTo('<break/>', 'p')
-            ->appendAttr('break', ['time' => '800ms']);
+        $transformer->addBreakTags('p')
+            ->addBreakTagTimeAttr('800ms');
 
         $transformer->replaceHeaders();
 
-        $this->assertStringContainsString( '<break time="800ms"></break>', $transformer->content);
-        $this->assertStringContainsString( '<break time="1200ms"></break>', $transformer->content);
-    }
-
-
-    public function test_we_can_append_multiple_html_tags()
-    {
-        $transformer = new SsmlFileTransformer($this->valid_html());
-
-        $transformer->appendTo('<span>Lorem</span>', 'p');
-
-        $this->assertTrue(Str::contains($transformer->content, 'span'));
-        $this->assertStringContainsString('<span>Lorem</span>', $transformer->content);
-    }
-
-    public function test_we_can_append_an_html_attribute()
-    {
-        $html = '<div class="all"><p>Hey bro, <a href="#">click here</a><br /> :)</p><p>Another Element</p></div>';
-        $transformer = new SsmlFileTransformer($html);
-
-        $transformer->appendAttr('p', ['class' => 'some-class']);
-
-        $this->assertTrue(Str::contains($transformer->content, 'class="some-class"'));
+        $this->assertStringContainsString('<break time="800ms"></break>', $transformer->content);
+        $this->assertStringContainsString('<break time="1200ms"></break>', $transformer->content);
     }
 
     public function test_we_can_append_multiple_ssml_break_tags_to_multiple_paragraphs()
@@ -219,7 +197,7 @@ class SsmlFileTransformTest extends TestCase
 
         $transformer = new SsmlFileTransformer($html);
 
-        $transformer->appendTo('<break />', 'p')->appendAttr('break', ['time' => '800ms']);
+        $transformer->addBreakTags('p')->addBreakTagTimeAttr('800ms');
 
         $this->assertEquals(2, substr_count($transformer->content, '<break time="800ms"></break>'));
     }
@@ -230,8 +208,8 @@ class SsmlFileTransformTest extends TestCase
 
         $transformer->removeTag('br')
             ->removeTag('img')
-            ->appendTo('<break />', 'p')
-            ->appendAttr('break', ['time' => '800ms'])
+            ->addBreakTags('p')
+            ->addBreakTagTimeAttr('800ms')
             ->save('file.ssml');
 
         $this->assertFileExists(public_path('storage/file.ssml'));
