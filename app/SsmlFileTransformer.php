@@ -159,7 +159,10 @@ class SsmlFileTransformer
      */
     public function replaceDashes()
     {
-        $this->content = preg_replace('/(?<!\<say)(?<!interpret)-(?!as>)/', '<break time="100ms"></break>', (string)$this->content);
+//        $this->content = preg_replace('/(?<!\<say)(?<!interpret)-(?!as>)/', '<break time="100ms"></break>', (string)$this->content);
+
+         $this->content = preg_replace('/(-)(?=[^>]*(<|$))/', '<break time="100ms"></break>', (string) $this->content);
+
         $this->content = preg_replace('/—/', '<break time="100ms"></break>', (string)$this->content);
 
         return $this;

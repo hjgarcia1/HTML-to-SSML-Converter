@@ -42,6 +42,7 @@ class SsmlTransformerTest extends TestCase
 
         $this->assertStringNotContainsString('—', $transformer->content);
         $this->assertStringContainsString('<break time="100ms"></break>', $transformer->content);
+        $this->assertStringContainsString('strin-g', $transformer->content);
     }
 
     public function test_it_can_replace_apostrophes()
